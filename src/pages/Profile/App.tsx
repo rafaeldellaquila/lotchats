@@ -1,4 +1,3 @@
-import '@theme/App.css'
 import { useTranslation } from 'react-i18next'
 
 function Profile() {
