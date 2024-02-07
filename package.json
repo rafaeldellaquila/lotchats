@@ -11,8 +11,10 @@
     "sort-json": "sort-json \"src/**/*.json\""
   },
   "dependencies": {
-    "@mantine/core": "^7.5.1",
-    "@mantine/hooks": "^7.5.1",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.8",
+    "@mui/material": "^5.15.7",
     "@reduxjs/toolkit": "^2.1.0",
     "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-react": "^7.33.2",
