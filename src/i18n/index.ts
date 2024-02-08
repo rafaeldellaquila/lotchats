@@ -1,8 +1,8 @@
 import { use } from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
-import en from './en/en.json'
-import pt from './pt/pt.json'
+import en from './en/index'
+import pt from './pt/index'
 
 const i18n = use(initReactI18next).init({
   resources: {
