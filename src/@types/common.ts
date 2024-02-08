@@ -3,3 +3,10 @@ export interface IDrawer {
   isOpen: boolean
   toggle: () => void
 }
+
+export interface Favorite {
+  id: number
+  name: string
+  avatarUrl: string | undefined
+  notificationCount?: number
+}
