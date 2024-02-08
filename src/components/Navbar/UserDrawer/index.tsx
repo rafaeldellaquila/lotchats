@@ -15,6 +15,8 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
+import { primaryTypographyStyles } from '../styles'
+
 import { IDrawer } from '@/@types/common'
 import Drawer from '@/components/shared/Drawer'
 import StatusSelect from '@/components/shared/StatusSelect'
@@ -57,16 +59,9 @@ const UserDrawer: React.FC<IDrawer> = ({ isOpen, toggle }) => {
             <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText
               primary={t(item.text)}
-              primaryTypographyProps={{
-                variant: 'body1',
-                color: index === menuItems.length - 1 ? 'error' : 'grey.100',
-                fontWeight: 600,
-                style: {
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis'
-                }
-              }}
+              primaryTypographyProps={primaryTypographyStyles({
+                color: index === menuItems.length - 1 ? 'error' : 'grey.100' // Cor condicional
+              })}
             />
           </ListItem>
         ))}

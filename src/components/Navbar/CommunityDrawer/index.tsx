@@ -16,6 +16,8 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
+import { primaryTypographyStyles } from '../styles'
+
 import { IDrawer } from '@/@types/common'
 import Drawer from '@/components/shared/Drawer'
 
@@ -49,16 +51,7 @@ const CommunityDrawer: React.FC<IDrawer> = ({ isOpen, toggle }) => {
             <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText
               primary={t(item.text)}
-              primaryTypographyProps={{
-                variant: 'body1',
-                color: 'grey.100',
-                fontWeight: 600,
-                style: {
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis'
-                }
-              }}
+              primaryTypographyProps={primaryTypographyStyles()}
             />
           </ListItem>
         ))}
@@ -78,16 +71,7 @@ const CommunityDrawer: React.FC<IDrawer> = ({ isOpen, toggle }) => {
               sx={{
                 mr: '1rem'
               }}
-              primaryTypographyProps={{
-                variant: 'body2',
-                color: 'grey.100',
-                fontWeight: 600,
-                style: {
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis'
-                }
-              }}
+              primaryTypographyProps={primaryTypographyStyles()}
             />
             <ListItemIcon>
               <CircleIcon sx={{ width: 8, height: 8 }} />

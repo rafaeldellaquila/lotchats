@@ -10,6 +10,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import CommunityDrawer from './CommunityDrawer'
+import SearchModal from './SearchModal'
 import UserDrawer from './UserDrawer'
 
 import { useToggle } from '@/hooks/utils/useToggle'
@@ -18,6 +19,7 @@ const NavBar: React.FC = () => {
   const { t } = useTranslation()
   const [isCommunityDrawerOpen, toggleCommunityDrawer] = useToggle()
   const [isUserDrawerOpen, toggleUserDrawer] = useToggle()
+  const [isModalOpen, toggleModalOpen] = useToggle()
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -33,30 +35,28 @@ const NavBar: React.FC = () => {
           >
             <MenuIcon />
           </IconButton>
-
           <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
             {t('home')}
           </Typography>
-
           <IconButton
             size='large'
             edge='start'
             color='inherit'
             aria-label='search'
             sx={{ mr: 2 }}
+            onClick={toggleModalOpen}
           >
             <SearchIcon />
           </IconButton>
-
           <Avatar onClick={toggleUserDrawer}>H</Avatar>
         </Toolbar>
       </AppBar>
-
       <CommunityDrawer
         isOpen={isCommunityDrawerOpen}
         toggle={toggleCommunityDrawer}
       />
       <UserDrawer isOpen={isUserDrawerOpen} toggle={toggleUserDrawer} />
+      <SearchModal isOpen={isModalOpen} toggle={toggleModalOpen} />
     </Box>
   )
 }
