@@ -24,8 +24,4 @@ export const GlobalStyles = css`
       box-sizing: inherit;
     }
   }
-
-  body {
-    height: 100%;
-  }
 `

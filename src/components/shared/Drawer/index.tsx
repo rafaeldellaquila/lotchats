@@ -1,11 +1,7 @@
 import { Close as CloseIcon } from '@mui/icons-material'
-import {
-  Drawer as MaterialDrawer,
-  IconButton,
-  DrawerProps
-} from '@mui/material'
+import { Drawer as MaterialDrawer, IconButton } from '@mui/material'
 
-interface CustomDrawerProps extends DrawerProps {
+interface CustomDrawerProps {
   isOpen: boolean
   toggle: () => void
   anchor?: 'left' | 'right'
@@ -25,6 +21,9 @@ const Drawer: React.FC<CustomDrawerProps> = ({
       onClose={toggle}
       PaperProps={{
         sx: { maxWidth: '12rem', width: '100%' }
+      }}
+      ModalProps={{
+        keepMounted: true
       }}
     >
       <IconButton

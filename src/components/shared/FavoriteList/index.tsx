@@ -26,7 +26,7 @@ const FavoriteList: React.FC<FavoriteListProps> = ({
   return (
     <Box sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
       <Typography variant='h1' fontWeight='600' sx={{ mb: 2 }}>
-        {t('FavoritePropss')}
+        {t('favorite')}
       </Typography>
       <List
         sx={{
@@ -45,7 +45,7 @@ const FavoriteList: React.FC<FavoriteListProps> = ({
         {visibleFavoriteProps.map(FavoriteProps => (
           <ListItem key={FavoriteProps.id}>
             <ListItemAvatar>
-              <Badge badgeContent={FavoriteProps.unreadCount} color='primary'>
+              <Badge badgeContent={FavoriteProps.unreadCount} color='error'>
                 <Avatar src={FavoriteProps.avatarUrl}>
                   {FavoriteProps.name[0]}
                 </Avatar>
