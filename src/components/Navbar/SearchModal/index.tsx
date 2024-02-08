@@ -12,9 +12,9 @@ import { useTranslation } from 'react-i18next'
 
 import { searchModalStyles } from '../styles'
 
-import { IDrawer } from '@/@types/common'
+import { DrawerProps } from '@/@types/common'
 
-const SearchModal: React.FC<IDrawer> = ({ isOpen, toggle }) => {
+const SearchModal: React.FC<DrawerProps> = ({ isOpen, toggle }) => {
   const { t } = useTranslation()
 
   return (

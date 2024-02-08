@@ -1,12 +1,17 @@
-export interface IDrawer {
+export interface DrawerProps {
   // UserDrawer - CommunityDrawer
   isOpen: boolean
   toggle: () => void
 }
 
-export interface Favorite {
+export interface ChatProps {
   id: number
   name: string
   avatarUrl: string | undefined
-  notificationCount?: number
+  unreadCount: number
+}
+
+export interface PreviewChatProps extends ChatProps {
+  messagePreview: string
+  time: string
 }

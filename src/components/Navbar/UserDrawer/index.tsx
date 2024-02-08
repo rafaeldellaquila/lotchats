@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next'
 
 import { primaryTypographyStyles } from '../styles'
 
-import { IDrawer } from '@/@types/common'
+import { DrawerProps } from '@/@types/common'
 import Drawer from '@/components/shared/Drawer'
 import StatusSelect from '@/components/shared/StatusSelect'
 
@@ -27,7 +27,7 @@ const menuItems = [
   { icon: <MeetingRoomIcon color='error' />, text: 'quit' }
 ]
 
-const UserDrawer: React.FC<IDrawer> = ({ isOpen, toggle }) => {
+const UserDrawer: React.FC<DrawerProps> = ({ isOpen, toggle }) => {
   const { t } = useTranslation()
 
   return (

@@ -9,24 +9,24 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
-import { Favorite } from '@/@types/common'
+import { ChatProps } from '@/@types/common'
 
-interface FavoritesListProps {
-  favorites: Favorite[]
+interface FavoriteListProps {
+  FavoriteProps: ChatProps[]
   maxVisible: number
 }
 
-const FavoritesList: React.FC<FavoritesListProps> = ({
-  favorites,
+const FavoriteList: React.FC<FavoriteListProps> = ({
+  FavoriteProps,
   maxVisible
 }) => {
   const { t } = useTranslation()
-  const visibleFavorites = favorites.slice(0, maxVisible)
+  const visibleFavoriteProps = FavoriteProps.slice(0, maxVisible)
 
   return (
     <Box sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
       <Typography variant='h1' fontWeight='600' sx={{ mb: 2 }}>
-        {t('favorites')}
+        {t('FavoritePropss')}
       </Typography>
       <List
         sx={{
@@ -39,14 +39,16 @@ const FavoritesList: React.FC<FavoritesListProps> = ({
           '&::-webkit-scrollbar': {
             display: 'none'
           },
-          '-ms-overflow-style': 'none'
+          msOverflowStyle: 'none'
         }}
       >
-        {visibleFavorites.map(favorite => (
-          <ListItem key={favorite.id}>
+        {visibleFavoriteProps.map(FavoriteProps => (
+          <ListItem key={FavoriteProps.id}>
             <ListItemAvatar>
-              <Badge badgeContent={favorite.notificationCount} color='primary'>
-                <Avatar src={favorite.avatarUrl}>{favorite.name[0]}</Avatar>
+              <Badge badgeContent={FavoriteProps.unreadCount} color='primary'>
+                <Avatar src={FavoriteProps.avatarUrl}>
+                  {FavoriteProps.name[0]}
+                </Avatar>
               </Badge>
             </ListItemAvatar>
           </ListItem>
@@ -56,4 +58,4 @@ const FavoritesList: React.FC<FavoritesListProps> = ({
   )
 }
 
-export default FavoritesList
+export default FavoriteList

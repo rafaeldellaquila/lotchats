@@ -1,75 +1,82 @@
 import { Box, Button } from '@mui/material'
 
-import { Favorite } from '@/@types/common'
-import FavoritesList from '@/components/shared/FavoriteList'
+import { ChatProps } from '@/@types/common'
+import FavoriteList from '@/components/shared/FavoriteList'
 import Navbar from '@components/Navbar'
 
-const mockFavorites: Favorite[] = [
+const mockFavoritePropss: ChatProps[] = [
   {
     id: 1,
     name: 'John Doe',
     avatarUrl: undefined,
-    notificationCount: 2
+    unreadCount: 2
   },
   {
     id: 2,
     name: 'Jane Doe',
     avatarUrl: undefined,
-    notificationCount: 3
+    unreadCount: 3
   },
   {
     id: 4,
     name: 'John Doe',
-    avatarUrl: undefined
+    avatarUrl: undefined,
+    unreadCount: 0
   },
   {
     id: 5,
     name: 'John Doe',
-    avatarUrl: undefined
+    avatarUrl: undefined,
+    unreadCount: 0
   },
   {
     id: 6,
     name: 'John Doe',
-    avatarUrl: undefined
+    avatarUrl: undefined,
+    unreadCount: 0
   },
   {
     id: 7,
     name: 'John Doe',
-    avatarUrl: undefined
+    avatarUrl: undefined,
+    unreadCount: 0
   },
   {
     id: 8,
     name: 'John Doe',
-    avatarUrl: undefined
+    avatarUrl: undefined,
+    unreadCount: 0
   },
   {
     id: 9,
     name: 'John Doe',
-    avatarUrl: undefined
+    avatarUrl: undefined,
+    unreadCount: 0
   },
   {
     id: 10,
     name: 'John Doe',
-    avatarUrl: undefined
+    avatarUrl: undefined,
+    unreadCount: 0
   },
   {
     id: 11,
     name: 'John Doe',
-    avatarUrl: undefined
+    avatarUrl: undefined,
+    unreadCount: 0
   }
 ]
 
 const Home: React.FC = () => {
   return (
-    <Box className='home-container' sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%' }}>
       <Navbar />
-      <FavoritesList favorites={mockFavorites} maxVisible={10} />
-      <section className='chat-section'>
+      <FavoriteList FavoriteProps={mockFavoritePropss} maxVisible={10} />
+      <section>
         <h2>Chat Privado</h2>
-
         <Button>Ver todas</Button>
       </section>
-      <section className='group-section'>
+      <section>
         <h2>Grupos</h2>
         <Button>Ver todas</Button>
       </section>
