@@ -5,18 +5,22 @@ import {
   IconButton,
   Toolbar,
   Typography,
-  Avatar
+  Avatar,
+  useMediaQuery,
+  useTheme
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
-import CommunityDrawer from './CommunityDrawer'
-import SearchModal from './SearchModal'
-import UserDrawer from './UserDrawer'
+import CommunitySideMenu from '../shared/CommunitySideMenu'
+import Drawer from '../shared/Drawer'
+import SearchModal from '../shared/SearchModal'
+import UserSideMenu from '../shared/UserSideMenu'
 
 import { useToggle } from '@/hooks/utils/useToggle'
 
 const NavBar: React.FC = () => {
   const { t } = useTranslation()
+  const isLargeScreen = useMediaQuery(useTheme().breakpoints.up('lg'))
   const [isCommunityDrawerOpen, toggleCommunityDrawer] = useToggle()
   const [isUserDrawerOpen, toggleUserDrawer] = useToggle()
   const [isModalOpen, toggleModalOpen] = useToggle()
@@ -25,19 +29,32 @@ const NavBar: React.FC = () => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='static' color='transparent' elevation={0}>
         <Toolbar>
-          <IconButton
-            size='large'
-            edge='start'
-            color='inherit'
-            aria-label='menu'
-            sx={{ mr: 2 }}
-            onClick={toggleCommunityDrawer}
-          >
-            <MenuIcon />
-          </IconButton>
+          {!isLargeScreen && (
+            <>
+              <IconButton
+                size='large'
+                edge='start'
+                color='inherit'
+                aria-label='menu'
+                sx={{ mr: 2 }}
+                onClick={toggleCommunityDrawer}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Drawer
+                isOpen={isCommunityDrawerOpen}
+                toggle={toggleCommunityDrawer}
+                anchor='left'
+              >
+                <CommunitySideMenu />
+              </Drawer>
+            </>
+          )}
+
           <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
             {t('home')}
           </Typography>
+
           <IconButton
             size='large'
             edge='start'
@@ -48,15 +65,22 @@ const NavBar: React.FC = () => {
           >
             <SearchIcon />
           </IconButton>
-          <Avatar onClick={toggleUserDrawer}>H</Avatar>
+          <SearchModal isOpen={isModalOpen} toggle={toggleModalOpen} />
+
+          {!isLargeScreen && (
+            <>
+              <Avatar onClick={toggleUserDrawer}>H</Avatar>
+              <Drawer
+                isOpen={isUserDrawerOpen}
+                toggle={toggleUserDrawer}
+                anchor='right'
+              >
+                <UserSideMenu />
+              </Drawer>
+            </>
+          )}
         </Toolbar>
       </AppBar>
-      <CommunityDrawer
-        isOpen={isCommunityDrawerOpen}
-        toggle={toggleCommunityDrawer}
-      />
-      <UserDrawer isOpen={isUserDrawerOpen} toggle={toggleUserDrawer} />
-      <SearchModal isOpen={isModalOpen} toggle={toggleModalOpen} />
     </Box>
   )
 }

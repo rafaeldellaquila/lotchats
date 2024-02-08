@@ -10,9 +10,8 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
-import { searchModalStyles } from '../styles'
-
 import { DrawerProps } from '@/@types/common'
+import { searchModalStyles } from '@/components/Navbar/styles'
 
 const SearchModal: React.FC<DrawerProps> = ({ isOpen, toggle }) => {
   const { t } = useTranslation()
@@ -20,7 +19,11 @@ const SearchModal: React.FC<DrawerProps> = ({ isOpen, toggle }) => {
   return (
     <Modal open={isOpen} onClose={toggle} aria-labelledby='search-modal'>
       <Box sx={searchModalStyles}>
-        <FormControl sx={{ m: 1 }} variant='outlined' size='small'>
+        <FormControl
+          sx={{ m: 1, width: '100%' }}
+          variant='outlined'
+          size='small'
+        >
           <InputLabel htmlFor='adornment-search'>{t('search')}</InputLabel>
           <OutlinedInput
             id='adornment-search'

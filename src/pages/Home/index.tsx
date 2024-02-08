@@ -1,10 +1,9 @@
-import { Box } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
 import { ChatProps, PreviewChatProps } from '@/@types/common'
 import ChatCardList from '@/components/Chat/ChatCardList'
 import FavoriteList from '@/components/shared/FavoriteList'
-import Navbar from '@components/Navbar'
+import AuthLayout from '@/layout/AuthLayout'
 
 const mockFavoriteProps: ChatProps[] = [
   {
@@ -166,16 +165,11 @@ const Home: React.FC = () => {
   const { t } = useTranslation()
 
   return (
-    <Box>
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-        <Navbar />
-        <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
-          <FavoriteList FavoriteProps={mockFavoriteProps} maxVisible={10} />
-          <ChatCardList title={t('private_chats')} chats={chats} />
-          <ChatCardList title={t('group_chats')} chats={chats} />
-        </Box>
-      </Box>
-    </Box>
+    <AuthLayout>
+      <FavoriteList FavoriteProps={mockFavoriteProps} maxVisible={10} />
+      <ChatCardList title={t('private_chats')} chats={chats} />
+      <ChatCardList title={t('group_chats')} chats={chats} />
+    </AuthLayout>
   )
 }
 

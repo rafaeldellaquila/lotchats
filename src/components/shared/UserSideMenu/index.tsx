@@ -15,10 +15,7 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
-import { primaryTypographyStyles } from '../styles'
-
-import { DrawerProps } from '@/@types/common'
-import Drawer from '@/components/shared/Drawer'
+import { primaryTypographyStyles } from '@/components/Navbar/styles'
 import StatusSelect from '@/components/shared/StatusSelect'
 
 const menuItems = [
@@ -27,11 +24,11 @@ const menuItems = [
   { icon: <MeetingRoomIcon color='error' />, text: 'quit' }
 ]
 
-const UserDrawer: React.FC<DrawerProps> = ({ isOpen, toggle }) => {
+const UserSideMenu: React.FC = () => {
   const { t } = useTranslation()
 
   return (
-    <Drawer isOpen={isOpen} toggle={toggle} anchor='right'>
+    <Box>
       <Box
         sx={{
           display: 'flex',
@@ -66,8 +63,8 @@ const UserDrawer: React.FC<DrawerProps> = ({ isOpen, toggle }) => {
           </ListItem>
         ))}
       </List>
-    </Drawer>
+    </Box>
   )
 }
 
-export default UserDrawer
+export default UserSideMenu
