@@ -71,8 +71,7 @@ const theme = createTheme({
     MuiChip: {
       styleOverrides: {
         label: {
-          fontWeight: 700,
-          color: '#353231'
+          fontWeight: 700
         }
       }
     }
