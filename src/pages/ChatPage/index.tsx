@@ -2,7 +2,7 @@ import { Box } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
 import { MessageProps } from '@/@types/common'
-import Chat from '@/components/Chat/Chat'
+import Chat from '@/components/Chat/PrivateChat'
 
 const mockMessages: MessageProps[] = [
   {

@@ -1,8 +1,8 @@
 import { Avatar, Badge, Box, Card, Typography } from '@mui/material'
 
-import { PreviewChatProps } from '@/@types/common'
+import { PrivateChatProps } from '@/@types/common'
 
-const ChatCard: React.FC<PreviewChatProps> = ({
+const PrivateChatCard: React.FC<PrivateChatProps> = ({
   avatarUrl,
   name,
   messagePreview,
@@ -66,4 +66,4 @@ const ChatCard: React.FC<PreviewChatProps> = ({
   )
 }
 
-export default ChatCard
+export default PrivateChatCard

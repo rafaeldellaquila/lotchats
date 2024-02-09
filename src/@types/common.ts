@@ -4,18 +4,17 @@ export interface DrawerProps {
   toggle: () => void
 }
 
-export interface ChatProps {
-  // ChatCard
-  id: number
+export interface UserProps {
   name: string
+  id: number
+  email: string
   avatarUrl: string | undefined
-  unreadCount: number
+  celNumber: string
 }
 
-export interface PreviewChatProps extends ChatProps {
-  // Favorite - Home
-  messagePreview: string
-  time: string
+export interface ChatProps extends UserProps {
+  // ChatCard
+  unreadCount: number
 }
 
 export interface MessageProps {
@@ -26,3 +25,27 @@ export interface MessageProps {
   time: string
   isOwner: boolean
 }
+
+interface BaseChatProps {
+  id: number
+  avatarUrl?: string
+  time: string
+}
+
+export interface GroupChatProps extends BaseChatProps {
+  isGroupChat: true
+  groupName: string
+  qtyMember: number
+  members: UserProps[]
+  tags: string[]
+}
+
+export interface PrivateChatProps extends BaseChatProps {
+  isGroupChat: false
+  name: string
+  unreadCount: number
+  email?: string
+  messagePreview: string
+}
+
+export type PreviewChatProps = GroupChatProps | PrivateChatProps
