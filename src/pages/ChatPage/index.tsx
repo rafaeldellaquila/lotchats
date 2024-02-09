@@ -40,7 +40,7 @@ const ChatPage: React.FC = () => {
   const receiver =
     mockMessages.find(message => !message.isOwner)?.sender || undefined
   return (
-    <Box>
+    <Box sx={{ height: '100%' }}>
       <Chat
         messages={mockMessages}
         receiver={receiver}

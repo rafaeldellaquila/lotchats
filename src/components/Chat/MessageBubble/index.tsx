@@ -4,28 +4,29 @@ import { MessageProps } from '@/@types/common'
 
 interface MessageBubbleProps {
   message: MessageProps
-  sx?: SxProps<Theme>
 }
 
-const MessageBubble: React.FC<MessageBubbleProps> = ({ message, sx }) => {
+const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
   const theme = useTheme()
   const alignToRight = message.isOwner
 
   const bubbleStyles: SxProps<Theme> = {
     maxWidth: '80%',
     minWidth: '10%',
-    padding: theme.spacing(1),
+    padding: theme.spacing(2),
     margin: theme.spacing(1, 0),
     borderRadius: theme.shape.borderRadius,
     bgcolor: message.isOwner
       ? theme.palette.primary.main
       : theme.palette.grey[200],
-    color: message.isOwner
-      ? theme.palette.common.white
-      : theme.palette.text.primary,
     alignSelf: alignToRight ? 'flex-end' : 'flex-start',
     wordBreak: 'break-word',
-    ...sx
+    marginLeft: message.isOwner ? 'auto' : 0,
+    marginRight: message.isOwner ? 0 : 'auto',
+    backgroundColor: message.isOwner
+      ? theme.palette.primary.main
+      : theme.palette.grey[300],
+    color: message.isOwner ? theme.palette.primary.contrastText : 'inherit'
   }
 
   return (
