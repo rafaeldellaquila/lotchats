@@ -12,7 +12,8 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
-  Badge
+  Badge,
+  Paper
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
@@ -41,40 +42,42 @@ const CommunitySideMenu: React.FC = () => {
   const { t } = useTranslation()
 
   return (
-    <List>
-      {menuItems.map((item, index) => (
-        <ListItem key={index}>
-          <ListItemIcon>{item.icon}</ListItemIcon>
-          <ListItemText
-            primary={t(item.text)}
-            primaryTypographyProps={primaryTypographyStyles()}
-          />
-        </ListItem>
-      ))}
-      <Divider sx={{ m: '.5rem', borderColor: 'transparent' }} />
-      <Typography variant='h1' sx={{ p: 2 }} color='grey.100'>
-        {t('contact')}
-      </Typography>
-      {contacts.map((contact, index) => (
-        <ListItem key={index}>
-          <ListItemIcon>
-            <Badge color='error' overlap='circular' variant='dot'>
-              <Avatar src={contact.avatar} sx={{ width: 24, height: 24 }} />
-            </Badge>
-          </ListItemIcon>
-          <ListItemText
-            primary={contact.name}
-            sx={{
-              mr: '1rem'
-            }}
-            primaryTypographyProps={primaryTypographyStyles()}
-          />
-          <ListItemIcon>
-            <CircleIcon sx={{ width: 8, height: 8 }} />
-          </ListItemIcon>
-        </ListItem>
-      ))}
-    </List>
+    <Paper elevation={1} sx={{ height: '100%' }}>
+      <List>
+        {menuItems.map((item, index) => (
+          <ListItem key={index}>
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText
+              primary={t(item.text)}
+              primaryTypographyProps={primaryTypographyStyles()}
+            />
+          </ListItem>
+        ))}
+        <Divider sx={{ m: '.5rem', borderColor: 'transparent' }} />
+        <Typography variant='h1' sx={{ p: 2 }} color='grey.100'>
+          {t('contact')}
+        </Typography>
+        {contacts.map((contact, index) => (
+          <ListItem key={index}>
+            <ListItemIcon>
+              <Badge color='error' overlap='circular' variant='dot'>
+                <Avatar src={contact.avatar} sx={{ width: 24, height: 24 }} />
+              </Badge>
+            </ListItemIcon>
+            <ListItemText
+              primary={contact.name}
+              sx={{
+                mr: '1rem'
+              }}
+              primaryTypographyProps={primaryTypographyStyles()}
+            />
+            <ListItemIcon>
+              <CircleIcon sx={{ width: 8, height: 8 }} />
+            </ListItemIcon>
+          </ListItem>
+        ))}
+      </List>
+    </Paper>
   )
 }
 

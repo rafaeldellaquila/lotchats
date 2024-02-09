@@ -11,7 +11,8 @@ import {
   Divider,
   Avatar,
   Typography,
-  Box
+  Box,
+  Paper
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
@@ -28,7 +29,7 @@ const UserSideMenu: React.FC = () => {
   const { t } = useTranslation()
 
   return (
-    <Box>
+    <Paper sx={{ height: '100%', overflow: 'hidden' }} elevation={1}>
       <Box
         sx={{
           display: 'flex',
@@ -46,24 +47,18 @@ const UserSideMenu: React.FC = () => {
       <Divider sx={{ m: '.5rem', borderColor: 'transparent' }} />
       <List sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
         {menuItems.map((item, index) => (
-          <ListItem
-            key={index}
-            sx={{
-              width: 'auto',
-              mt: index === menuItems.length - 1 ? 'auto' : 0
-            }}
-          >
+          <ListItem key={index}>
             <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText
               primary={t(item.text)}
               primaryTypographyProps={primaryTypographyStyles({
-                color: index === menuItems.length - 1 ? 'error' : 'grey.100' // Cor condicional
+                color: index === menuItems.length - 1 ? 'error' : 'grey.100'
               })}
             />
           </ListItem>
         ))}
       </List>
-    </Box>
+    </Paper>
   )
 }
 

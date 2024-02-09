@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { ChatProps, PreviewChatProps } from '@/@types/common'
 import ChatCardList from '@/components/Chat/ChatCardList'
 import FavoriteList from '@/components/shared/FavoriteList'
-import AuthLayout from '@/layout/AuthLayout'
 
 const mockFavoriteProps: ChatProps[] = [
   {
@@ -161,16 +160,16 @@ const chats: PreviewChatProps[] = [
   }
 ]
 
-const Home: React.FC = () => {
+const HomePage: React.FC = () => {
   const { t } = useTranslation()
 
   return (
-    <AuthLayout>
+    <>
       <FavoriteList FavoriteProps={mockFavoriteProps} maxVisible={10} />
       <ChatCardList title={t('private_chats')} chats={chats} />
       <ChatCardList title={t('group_chats')} chats={chats} />
-    </AuthLayout>
+    </>
   )
 }
 
-export default Home
+export default HomePage
