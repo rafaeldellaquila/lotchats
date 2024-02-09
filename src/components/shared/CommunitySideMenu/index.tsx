@@ -18,11 +18,12 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import { primaryTypographyStyles } from '@/components/Navbar/styles'
+import { useNavigation } from '@/hooks/utils/useNavigation'
 
 const menuItems = [
-  { icon: <HomeIcon />, text: 'home' },
-  { icon: <LanguageIcon />, text: 'discover' },
-  { icon: <GroupAddIcon />, text: 'create_group' }
+  { icon: <HomeIcon />, text: 'home', to: '/' },
+  { icon: <LanguageIcon />, text: 'discover', to: '/discover' },
+  { icon: <GroupAddIcon />, text: 'create_group', to: 'modal' }
 ]
 
 const contacts = [
@@ -40,12 +41,17 @@ const contacts = [
 
 const CommunitySideMenu: React.FC = () => {
   const { t } = useTranslation()
+  const { handleNavigate } = useNavigation()
 
   return (
     <Paper elevation={1} sx={{ height: '100%' }}>
       <List>
         {menuItems.map((item, index) => (
-          <ListItem key={index}>
+          <ListItem
+            key={index}
+            onClick={() => handleNavigate(item.to)}
+            sx={{ cursor: 'pointer' }}
+          >
             <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText
               primary={t(item.text)}

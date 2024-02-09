@@ -18,15 +18,17 @@ import { useTranslation } from 'react-i18next'
 
 import { primaryTypographyStyles } from '@/components/Navbar/styles'
 import StatusSelect from '@/components/shared/StatusSelect'
+import { useNavigation } from '@/hooks/utils/useNavigation'
 
 const menuItems = [
-  { icon: <GroupAddIcon />, text: 'create_group' },
-  { icon: <LanguageIcon />, text: 'config' },
-  { icon: <MeetingRoomIcon color='error' />, text: 'quit' }
+  { icon: <GroupAddIcon />, text: 'create_group', to: 'modal' },
+  { icon: <LanguageIcon />, text: 'config', to: '/config' },
+  { icon: <MeetingRoomIcon color='error' />, text: 'quit', to: 'logout' }
 ]
 
 const UserSideMenu: React.FC = () => {
   const { t } = useTranslation()
+  const { handleNavigate } = useNavigation()
 
   return (
     <Paper sx={{ height: '100%', overflow: 'hidden' }} elevation={1}>
@@ -47,7 +49,11 @@ const UserSideMenu: React.FC = () => {
       <Divider sx={{ m: '.5rem', borderColor: 'transparent' }} />
       <List sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
         {menuItems.map((item, index) => (
-          <ListItem key={index}>
+          <ListItem
+            key={index}
+            onClick={() => handleNavigate(item.to)}
+            sx={{ cursor: 'pointer' }}
+          >
             <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText
               primary={t(item.text)}
