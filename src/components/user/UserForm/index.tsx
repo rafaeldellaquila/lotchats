@@ -40,6 +40,8 @@ const UserForm: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     // Implementar lógica de formulário
+
+    // IMPLEMENTAR SENHA!!!! E MUDANCA DE SENHA
     console.log(formData)
     if (avatar) {
       console.log(avatar)
