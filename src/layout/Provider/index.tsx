@@ -1,24 +1,26 @@
 import { Global } from '@emotion/react'
 import { ThemeProvider } from '@mui/material'
-import { StrictMode } from 'react'
-import { Provider } from 'react-redux'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { StrictMode, useEffect } from 'react'
+import { Provider as StoreProvider, useDispatch } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
 import CreateGroupChatModal from '@/components/shared/CreateGroupChatModal'
 import SearchModal from '@/components/shared/SearchModal'
 import { ModalContext } from '@/context/ModalContext'
 import { useToggle } from '@/hooks/utils/useToggle'
+import { setLoading, setUser } from '@/redux/slices/authSlice'
 import { persistor, store } from '@/redux/store/index'
 import { GlobalStyles } from '@/theme/global'
 import theme from '@theme/index'
 
-const Persistor: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isCreateGroupModalOpen, toggleCreateGroupModal] = useToggle()
   const [isSearchModalOpen, toggleSearchModal] = useToggle()
 
   return (
     <StrictMode>
-      <Provider store={store}>
+      <StoreProvider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <ThemeProvider theme={theme}>
             <Global styles={GlobalStyles} />
@@ -42,9 +44,9 @@ const Persistor: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             </ModalContext.Provider>
           </ThemeProvider>
         </PersistGate>
-      </Provider>
+      </StoreProvider>
     </StrictMode>
   )
 }
 
-export default Persistor
+export default Provider

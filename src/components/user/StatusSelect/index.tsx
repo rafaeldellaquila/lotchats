@@ -10,7 +10,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { setStatus } from '@/redux/slices/statusReducer'
+import { setStatus } from '@/redux/slices/statusSlice'
 import { RootState } from '@/redux/store'
 
 const StatusSelect: React.FC = () => {

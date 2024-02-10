@@ -12,7 +12,8 @@ import {
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import statusReducer from '../slices/statusReducer'
+import authReducer from '../slices/authSlice'
+import statusReducer from '../slices/statusSlice'
 
 const persistConfig = {
   key: 'root',
@@ -21,7 +22,8 @@ const persistConfig = {
 }
 
 const rootReducer = combineReducers({
-  status: statusReducer
+  status: statusReducer,
+  auth: authReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

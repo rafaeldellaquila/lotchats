@@ -8,7 +8,7 @@ const initialState: StatusState = {
   value: ''
 }
 
-export const statusSlice = createSlice({
+export const StatusReducer = createSlice({
   name: 'status',
   initialState,
   reducers: {
@@ -18,6 +18,6 @@ export const statusSlice = createSlice({
   }
 })
 
-export const { setStatus } = statusSlice.actions
+export const { setStatus } = StatusReducer.actions
 
-export default statusSlice.reducer
+export default StatusReducer.reducer

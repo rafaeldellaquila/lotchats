@@ -2,7 +2,11 @@ import { Box, TextField, Button, Avatar, Typography } from '@mui/material'
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  UserCredential
+  UserCredential,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+  User
 } from 'firebase/auth'
 import { doc, getFirestore, setDoc } from 'firebase/firestore'
 import { ref, getStorage, uploadBytes, getDownloadURL } from 'firebase/storage'
@@ -47,7 +51,6 @@ const UserForm: React.FC = () => {
     undefined
   )
 
-  // Manipulação de eventos
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setFormData({ ...formData, [name]: value })
@@ -72,19 +75,22 @@ const UserForm: React.FC = () => {
     file: File,
     userId: string
   ): Promise<string | null> => {
+    if (!file) return null
     const storageRef = ref(storage, `avatars/${userId}/${file.name}`)
     await uploadBytes(storageRef, file)
     return getDownloadURL(storageRef)
   }
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const updateUserInfo = async (userId: string) => {
+    const avatarUrl = avatar ? await handleAvatarUpload(avatar, userId) : null
+    await setDoc(doc(db, 'users', userId), {
+      name: formData.name,
+      celNumber: formData.celNumber,
+      ...(avatarUrl && { avatarUrl })
+    })
+  }
 
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match")
-      return
-    }
-
+  const handleRegisterUser = async () => {
     try {
       const userCredential: UserCredential =
         await createUserWithEmailAndPassword(
@@ -92,20 +98,46 @@ const UserForm: React.FC = () => {
           formData.email,
           formData.password
         )
-      const userId = userCredential.user.uid
-      const avatarUrl = avatar ? await handleAvatarUpload(avatar, userId) : null
-
-      await setDoc(doc(db, 'users', userId), {
-        name: formData.name,
-        celNumber: formData.celNumber,
-        avatarUrl
-      })
-
-      alert('User registered successfully')
+      await updateUserInfo(userCredential.user.uid)
+      console.log('User registered successfully')
       handleNavigate('/')
     } catch (error) {
       console.error(error)
-      alert('Error registering user')
+      console.log('Error registering user')
+    }
+  }
+
+  const handleUpdateUser = async (user: User) => {
+    try {
+      if (formData.currentPassword && formData.password) {
+        const credential = EmailAuthProvider.credential(
+          user.email!,
+          formData.currentPassword
+        )
+        await reauthenticateWithCredential(user, credential)
+        await updatePassword(user, formData.password)
+      }
+      await updateUserInfo(user.uid)
+      console.log('User updated successfully')
+      handleNavigate(0)
+    } catch (error) {
+      console.error(error)
+      console.log('Error updating user')
+    }
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (formData.password !== formData.confirmPassword) {
+      console.log("Passwords don't match")
+      return
+    }
+
+    const user = auth.currentUser
+    if (isConfigPage && user) {
+      await handleUpdateUser(user)
+    } else {
+      await handleRegisterUser()
     }
   }
 
@@ -131,19 +163,21 @@ const UserForm: React.FC = () => {
       </Button>
       <TextField
         margin='normal'
-        required
+        required={isRegisterPage}
         fullWidth
         id='name'
         label={t('name')}
         name='name'
         autoComplete='name'
         autoFocus
+        disabled={isConfigPage}
         value={formData.name}
         onChange={handleChange}
       />
       <TextField
         margin='normal'
-        required
+        required={isRegisterPage}
+        disabled={isConfigPage}
         fullWidth
         id='email'
         label={t('email')}
@@ -154,7 +188,8 @@ const UserForm: React.FC = () => {
       />
       <TextField
         margin='normal'
-        required
+        required={isRegisterPage}
+        disabled={isConfigPage}
         fullWidth
         id='celNumber'
         label={t('cel_number')}
