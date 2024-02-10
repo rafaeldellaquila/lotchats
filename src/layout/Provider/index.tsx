@@ -17,6 +17,7 @@ import theme from '@theme/index'
 const Persistor: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isCreateGroupModalOpen, toggleCreateGroupModal] = useToggle()
   const [isSearchModalOpen, toggleSearchModal] = useToggle()
+
   return (
     <StrictMode>
       <Provider store={store}>

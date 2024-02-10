@@ -1,13 +1,21 @@
-import { Box, TextField, Button, Avatar } from '@mui/material'
+import { Box, TextField, Button, Avatar, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router-dom'
 
 const UserForm: React.FC = () => {
   const { t } = useTranslation()
+  const { pathname } = useLocation()
+  const isRegisterPage = pathname === '/register'
+  const isConfigPage = pathname === '/config'
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    celNumber: ''
+    celNumber: '',
+    password: '',
+    confirmPassword: '',
+    currentPassword: ''
   })
   const [avatar, setAvatar] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | undefined>(
@@ -41,7 +49,6 @@ const UserForm: React.FC = () => {
     e.preventDefault()
     // Implementar lógica de formulário
 
-    // IMPLEMENTAR SENHA!!!! E MUDANCA DE SENHA
     console.log(formData)
     if (avatar) {
       console.log(avatar)
@@ -108,6 +115,51 @@ const UserForm: React.FC = () => {
         value={formData.celNumber}
         onChange={handleChange}
       />
+      {isRegisterPage || isConfigPage ? (
+        <>
+          <Typography component='h1' variant='h5'>
+            {isRegisterPage ? t('create_your_password') : t('change_password')}
+          </Typography>
+          {isConfigPage && (
+            <TextField
+              margin='normal'
+              required
+              fullWidth
+              id='currentPassword'
+              label={t('current_password')}
+              name='currentPassword'
+              type='password'
+              autoComplete='current-password'
+              value={formData.currentPassword}
+              onChange={handleChange}
+            />
+          )}
+          <TextField
+            margin='normal'
+            required
+            fullWidth
+            id='password'
+            label={isRegisterPage ? t('password') : t('new_password')}
+            name='password'
+            type='password'
+            autoComplete='new-password'
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <TextField
+            margin='normal'
+            required
+            fullWidth
+            id='confirmPassword'
+            label={t('confirm_password')}
+            name='confirmPassword'
+            type='password'
+            autoComplete='new-password'
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
+        </>
+      ) : null}
       <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
         {t('submit')}
       </Button>
