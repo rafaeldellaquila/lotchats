@@ -4,8 +4,6 @@ import { StrictMode } from 'react'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
-import '@/i18n/index'
-
 import CreateGroupChatModal from '@/components/shared/CreateGroupChatModal'
 import SearchModal from '@/components/shared/SearchModal'
 import { ModalContext } from '@/context/ModalContext'

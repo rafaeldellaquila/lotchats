@@ -1,15 +1,15 @@
-import './i18n/index'
+import './i18n'
 
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 
-import Persistor from './layout/Provider'
+import Provider from './layout/Provider'
 import RouterComponent from './routes'
-
+import '@/firebase'
 createRoot(document.getElementById('root')!).render(
-  <Persistor>
+  <Provider>
     <BrowserRouter>
       <RouterComponent />
     </BrowserRouter>
-  </Persistor>
+  </Provider>
 )
