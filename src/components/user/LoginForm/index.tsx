@@ -1,11 +1,17 @@
 import { Box, TextField, Button, Link } from '@mui/material'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useNavigation } from '@/hooks/utils/useNavigation'
+
 const LoginForm: React.FC = () => {
   const { t } = useTranslation()
+  const { handleNavigate } = useNavigation()
+  const auth = getAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
@@ -15,10 +21,19 @@ const LoginForm: React.FC = () => {
     setPassword(e.target.value)
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Implementar lógica de login
-    console.log({ email, password })
+    setError('') // Limpa erros anteriores
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password)
+      // Redireciona o usuário para a página inicial após o login bem-sucedido
+      handleNavigate('/home')
+    } catch (error) {
+      // Trata erros de login, como senha incorreta ou usuário não encontrado
+      console.error('Login error:', error)
+      setError('Failed to log in. Please check your credentials.') // Define uma mensagem de erro genérica
+    }
   }
 
   return (
@@ -57,6 +72,11 @@ const LoginForm: React.FC = () => {
         value={password}
         onChange={handlePasswordChange}
       />
+      {error && (
+        <Box color='error.main' mt={2}>
+          {error}
+        </Box>
+      )}
       <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
         {t('login')}
       </Button>
