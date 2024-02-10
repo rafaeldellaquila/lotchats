@@ -14,7 +14,7 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
 
   return (
     <Card
-      onClick={() => handleNavigate('/groupchat')}
+      onClick={() => handleNavigate('/chat')}
       sx={{
         display: 'flex',
         alignItems: 'center',

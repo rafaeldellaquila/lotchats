@@ -1,8 +1,8 @@
 import { Box, useTheme } from '@mui/material'
 
-import ChatInput from '../ChatInput'
-import ChatNavBar from '../ChatNavBar'
-import MessageBubble from '../MessageBubble'
+import ChatInput from '../../shared/ChatInput'
+import ChatNavBar from '../../shared/ChatNavBar'
+import MessageBubble from '../../shared/MessageBubble'
 
 import { MessageProps } from '@/@types/common'
 
@@ -23,7 +23,7 @@ const Chat: React.FC<ChatProps> = ({ messages, receiver, onBack }) => {
         minHeight: '100%'
       }}
     >
-      <ChatNavBar receiver={receiver} onBack={onBack} />
+      <ChatNavBar receiver={receiver} onBack={onBack} isGroup={false} />
       <Box
         sx={{
           flexGrow: 1,

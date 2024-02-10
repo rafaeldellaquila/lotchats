@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { ChatProps, GroupChatProps, PreviewChatProps } from '@/@types/common'
-import ChatCardList from '@/components/Chat/ChatCardList'
+import ChatCardList from '@/components/chat/shared/ChatCardList'
 import FavoriteList from '@/components/shared/FavoriteList'
 
 const mockFavoriteProps: ChatProps[] = [

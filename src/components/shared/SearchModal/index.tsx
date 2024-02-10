@@ -12,7 +12,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { DrawerProps } from '@/@types/common'
-import { searchModalStyles } from '@/components/Navbar/styles'
+import { searchModalStyles } from '@/components/shared/Navbar/styles'
 
 const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
   const { t } = useTranslation()

@@ -18,7 +18,7 @@ import {
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import MenuItemComponent from './ChatNavMenu/index' // Ajuste o caminho conforme necessário
+import MenuItemComponent from './ChatNavMenu'
 
 import { useNavigation } from '@/hooks/utils/useNavigation'
 

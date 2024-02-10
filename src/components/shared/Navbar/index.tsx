@@ -10,9 +10,9 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
-import CommunitySideMenu from '../shared/CommunitySideMenu'
-import Drawer from '../shared/Drawer'
-import UserSideMenu from '../shared/UserSideMenu'
+import CommunitySideMenu from '../../community/CommunitySideMenu'
+import UserSideMenu from '../../user/UserSideMenu'
+import Drawer from '../Drawer'
 
 import { useMediaQuery } from '@/hooks/utils/useMediaQueries'
 import { useModal } from '@/hooks/utils/useModal'

@@ -1,4 +1,4 @@
-import UserForm from '@/components/UserForm'
+import UserForm from '@/components/user/UserForm'
 
 const ConfigPage: React.FC = () => {
   return (

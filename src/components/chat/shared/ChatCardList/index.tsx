@@ -2,8 +2,8 @@ import { Box, Button, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import GroupChatCard from '../GroupChatCard'
-import PrivateChatCard from '../PrivateChatCard'
+import GroupChatCard from '../../group/GroupChatCard'
+import PrivateChatCard from '../../private/PrivateChatCard'
 
 import { PreviewChatProps } from '@/@types/common'
 

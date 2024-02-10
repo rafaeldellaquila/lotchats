@@ -1,10 +1,10 @@
 import { Box } from '@mui/material'
 import { Outlet, useLocation } from 'react-router-dom'
 
-import CommunitySideMenu from '@/components/shared/CommunitySideMenu'
-import UserSideMenu from '@/components/shared/UserSideMenu'
+import CommunitySideMenu from '@/components/community/CommunitySideMenu'
+import Navbar from '@/components/shared/Navbar'
+import UserSideMenu from '@/components/user/UserSideMenu'
 import { useMediaQuery } from '@/hooks/utils/useMediaQueries'
-import Navbar from '@components/Navbar'
 
 const AuthLayout: React.FC = () => {
   const [isLargeScreen] = useMediaQuery()

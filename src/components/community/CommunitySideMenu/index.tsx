@@ -17,7 +17,7 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
-import { primaryTypographyStyles } from '@/components/Navbar/styles'
+import { primaryTypographyStyles } from '@/components/shared/Navbar/styles'
 import { useNavigation } from '@/hooks/utils/useNavigation'
 
 const menuItems = [

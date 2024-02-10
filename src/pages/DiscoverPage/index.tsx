@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { GroupChatProps } from '@/@types/common'
-import ChatCardList from '@/components/Chat/ChatCardList'
+import ChatCardList from '@/components/chat/shared/ChatCardList'
 
 const chats: GroupChatProps[] = [
   {

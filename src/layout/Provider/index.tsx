@@ -6,7 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 
 import '@/i18n/index'
 
-import CreateGroupChatModal from '@/components/Chat/CreateGroupChatModal'
+import CreateGroupChatModal from '@/components/shared/CreateGroupChatModal'
 import SearchModal from '@/components/shared/SearchModal'
 import { ModalContext } from '@/context/ModalContext'
 import { useToggle } from '@/hooks/utils/useToggle'
