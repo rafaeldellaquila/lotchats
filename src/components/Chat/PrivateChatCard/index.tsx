@@ -1,6 +1,7 @@
 import { Avatar, Badge, Box, Card, Typography } from '@mui/material'
 
 import { PrivateChatProps } from '@/@types/common'
+import { useNavigation } from '@/hooks/utils/useNavigation'
 
 const PrivateChatCard: React.FC<PrivateChatProps> = ({
   avatarUrl,
@@ -9,8 +10,11 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
   unreadCount,
   time
 }) => {
+  const { handleNavigate } = useNavigation()
+
   return (
     <Card
+      onClick={() => handleNavigate('/groupchat')}
       sx={{
         display: 'flex',
         alignItems: 'center',

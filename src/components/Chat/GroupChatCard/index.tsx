@@ -1,6 +1,7 @@
 import { Avatar, Badge, Box, Card, Chip, Typography } from '@mui/material'
 
 import { GroupChatProps } from '@/@types/common'
+import { useNavigation } from '@/hooks/utils/useNavigation'
 
 const GroupChatCard: React.FC<GroupChatProps> = ({
   avatarUrl,
@@ -8,8 +9,11 @@ const GroupChatCard: React.FC<GroupChatProps> = ({
   time,
   qtyMember
 }) => {
+  const { handleNavigate } = useNavigation()
+
   return (
     <Card
+      onClick={() => handleNavigate('/groupchat')}
       sx={{
         display: 'flex',
         alignItems: 'center',

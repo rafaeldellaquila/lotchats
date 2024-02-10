@@ -7,9 +7,8 @@ export const useNavigation = () => {
   const { toggleCreateGroupModal } = useModal()
 
   const handleNavigate = (to: string) => {
-    if (to === 'modal') {
-      toggleCreateGroupModal()
-    } else if (to === 'logout') console.log('Implementar logoff')
+    if (to === 'modal') toggleCreateGroupModal()
+    else if (to === 'logout') console.log('Implementar logoff')
     else navigate(to)
   }
 
