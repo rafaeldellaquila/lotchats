@@ -4,9 +4,13 @@ import { MessageProps } from '@/@types/common'
 
 interface MessageBubbleProps {
   message: MessageProps
+  isGroup?: boolean
 }
 
-const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
+const MessageBubble: React.FC<MessageBubbleProps> = ({
+  message,
+  isGroup = false
+}) => {
   const theme = useTheme()
   const alignToRight = message.isOwner
 
@@ -31,6 +35,11 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
 
   return (
     <Box sx={bubbleStyles}>
+      {isGroup && (
+        <Typography variant='body2' fontWeight={'bold'}>
+          {message.sender}
+        </Typography>
+      )}
       <Typography variant='body1'>{message.message}</Typography>
       <Typography variant='caption'>{message.time}</Typography>
     </Box>

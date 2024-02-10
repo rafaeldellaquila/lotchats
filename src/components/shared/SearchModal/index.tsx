@@ -25,7 +25,7 @@ const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
   const handleSearchSubmit = () => {
     console.log('Search for:', searchTerm)
     // Adicionar Logica de pesquisa
-    onClose() // Feche o modal após a pesquisa
+    onClose()
   }
 
   return (

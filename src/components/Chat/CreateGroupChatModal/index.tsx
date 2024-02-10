@@ -60,8 +60,8 @@ const CreateGroupChatModal: React.FC<{
   const handleSubmit = () => {
     console.log('Group Name:', groupName)
     console.log('Tags:', tags)
-    // Aqui você pode adicionar lógica para processar os dados do formulário, incluindo o upload do avatar
-    onClose() // Feche o modal após o envio
+    // implementar formulario
+    onClose()
   }
 
   return (

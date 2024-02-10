@@ -7,7 +7,6 @@ import PrivateChatCard from '../PrivateChatCard'
 
 import { PreviewChatProps } from '@/@types/common'
 
-// Use ExtendedChatProps agora
 interface ChatCardListProps {
   title: string
   chats: PreviewChatProps[]
