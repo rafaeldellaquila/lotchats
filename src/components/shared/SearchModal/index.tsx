@@ -8,16 +8,28 @@ import {
   Modal,
   OutlinedInput
 } from '@mui/material'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { DrawerProps } from '@/@types/common'
 import { searchModalStyles } from '@/components/Navbar/styles'
 
-const SearchModal: React.FC<DrawerProps> = ({ isOpen, toggle }) => {
+const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
   const { t } = useTranslation()
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value)
+  }
+
+  const handleSearchSubmit = () => {
+    console.log('Search for:', searchTerm)
+    // Adicionar Logica de pesquisa
+    onClose() // Feche o modal após a pesquisa
+  }
 
   return (
-    <Modal open={isOpen} onClose={toggle} aria-labelledby='search-modal'>
+    <Modal open={open} onClose={onClose} aria-labelledby='search-modal'>
       <Box sx={searchModalStyles}>
         <FormControl
           sx={{ m: 1, width: '100%' }}
@@ -27,15 +39,13 @@ const SearchModal: React.FC<DrawerProps> = ({ isOpen, toggle }) => {
           <InputLabel htmlFor='adornment-search'>{t('search')}</InputLabel>
           <OutlinedInput
             id='adornment-search'
+            type='text'
+            value={searchTerm}
+            onChange={handleSearchChange}
             label={t('search')}
-            sx={{
-              fieldset: {
-                borderColor: 'primary.main'
-              }
-            }}
             endAdornment={
               <InputAdornment position='end'>
-                <IconButton edge='end'>
+                <IconButton edge='end' onClick={handleSearchSubmit}>
                   <SearchIcon />
                 </IconButton>
               </InputAdornment>

@@ -1,7 +1,7 @@
 export interface DrawerProps {
   // Drawer - SearchModal
-  isOpen: boolean
-  toggle: () => void
+  open: boolean
+  onClose: () => void
 }
 
 export interface UserProps {

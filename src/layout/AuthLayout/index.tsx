@@ -22,16 +22,16 @@ const AuthLayout: React.FC = () => {
       >
         {!isLargeScreen && <Navbar />}
         {isLargeScreen && (
-          <Box sx={{ width: 250 }}>
+          <Box sx={{ width: '12rem' }}>
             <CommunitySideMenu />
           </Box>
         )}
-        <Box sx={{ flexGrow: 1, overflow: 'auto', p: 3 }}>
+        <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
           {isLargeScreen && pathname !== '/chat' && <Navbar />}
           <Outlet />
         </Box>
         {isLargeScreen && (
-          <Box sx={{ width: 250 }}>
+          <Box sx={{ width: '12rem' }}>
             <UserSideMenu />
           </Box>
         )}

@@ -12,20 +12,20 @@ import { useLocation } from 'react-router-dom'
 
 import CommunitySideMenu from '../shared/CommunitySideMenu'
 import Drawer from '../shared/Drawer'
-import SearchModal from '../shared/SearchModal'
 import UserSideMenu from '../shared/UserSideMenu'
 
 import { useMediaQuery } from '@/hooks/utils/useMediaQueries'
+import { useModal } from '@/hooks/utils/useModal'
 import { useToggle } from '@/hooks/utils/useToggle'
 
 const NavBar: React.FC = () => {
   const { t } = useTranslation()
   const [isLargeScreen] = useMediaQuery()
   const { pathname } = useLocation()
+  const { toggleSearchModal } = useModal()
 
   const [isCommunityDrawerOpen, toggleCommunityDrawer] = useToggle()
   const [isUserDrawerOpen, toggleUserDrawer] = useToggle()
-  const [isModalOpen, toggleModalOpen] = useToggle()
 
   const handleTitles = () => {
     if (pathname === '/') return t('home')
@@ -75,11 +75,10 @@ const NavBar: React.FC = () => {
             color='inherit'
             aria-label='search'
             sx={{ mr: 2 }}
-            onClick={toggleModalOpen}
+            onClick={toggleSearchModal}
           >
             <SearchIcon />
           </IconButton>
-          <SearchModal isOpen={isModalOpen} toggle={toggleModalOpen} />
 
           {!isLargeScreen && (
             <>
