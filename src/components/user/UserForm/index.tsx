@@ -8,9 +8,9 @@ import {
   updatePassword,
   User
 } from 'firebase/auth'
-import { doc, getFirestore, setDoc } from 'firebase/firestore'
+import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore'
 import { ref, getStorage, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
@@ -140,6 +140,30 @@ const UserForm: React.FC = () => {
       await handleRegisterUser()
     }
   }
+
+  useEffect(() => {
+    if (isConfigPage) {
+      const user = auth.currentUser
+      if (user) {
+        const userRef = doc(db, 'users', user.uid)
+        getDoc(userRef).then(docSnap => {
+          if (docSnap.exists()) {
+            const userData = docSnap.data()
+            setFormData(prevState => ({
+              ...prevState,
+              name: userData.name,
+              email: user.email || '',
+              celNumber: userData.celNumber
+            }))
+            // Set avatarPreview if avatarUrl exists
+            if (userData.avatarUrl) {
+              setAvatarPreview(userData.avatarUrl)
+            }
+          }
+        })
+      }
+    }
+  }, [auth, db, isConfigPage])
 
   return (
     <Box
