@@ -19,8 +19,8 @@ import statusReducer from '../slices/statusSlice'
 const persistConfig = {
   key: 'root',
   version: 1,
-  storage,
-  blacklist: ['searchResults']
+  storage
+  //blacklist: ['searchResults']
 }
 
 const rootReducer = combineReducers({

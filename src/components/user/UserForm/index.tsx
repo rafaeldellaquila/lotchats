@@ -32,12 +32,10 @@ const UserForm: React.FC = () => {
   const isConfigPage = pathname === '/config'
   const { handleNavigate } = useNavigation()
 
-  // Inicializações do Firebase
   const auth = getAuth()
   const db = getFirestore()
   const storage = getStorage()
 
-  // Estado do componente
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -73,19 +71,20 @@ const UserForm: React.FC = () => {
 
   const handleAvatarUpload = async (
     file: File,
-    userId: string
+    uid: string
   ): Promise<string | null> => {
     if (!file) return null
-    const storageRef = ref(storage, `avatars/${userId}/${file.name}`)
+    const storageRef = ref(storage, `avatars/${uid}/${file.name}`)
     await uploadBytes(storageRef, file)
     return getDownloadURL(storageRef)
   }
 
-  const updateUserInfo = async (userId: string) => {
-    const avatarUrl = avatar ? await handleAvatarUpload(avatar, userId) : null
+  const updateUserInfo = async (uid: string) => {
+    const avatarUrl = avatar ? await handleAvatarUpload(avatar, uid) : null
     await setDoc(
-      doc(db, 'users', userId),
+      doc(db, 'users', uid),
       {
+        id: uid,
         name: formData.name,
         email: formData.email,
         celNumber: formData.celNumber,
@@ -114,13 +113,19 @@ const UserForm: React.FC = () => {
 
   const handleUpdateUser = async (user: User) => {
     try {
-      if (formData.currentPassword && formData.password) {
-        const credential = EmailAuthProvider.credential(
-          user.email!,
-          formData.currentPassword
-        )
-        await reauthenticateWithCredential(user, credential)
-        await updatePassword(user, formData.password)
+      if (
+        formData.password &&
+        formData.confirmPassword &&
+        formData.password === formData.confirmPassword
+      ) {
+        if (formData.currentPassword) {
+          const credential = EmailAuthProvider.credential(
+            user.email!,
+            formData.currentPassword
+          )
+          await reauthenticateWithCredential(user, credential)
+          await updatePassword(user, formData.password)
+        }
       }
       await updateUserInfo(user.uid)
       console.log('User updated successfully')

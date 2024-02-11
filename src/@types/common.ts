@@ -19,7 +19,7 @@ export interface ChatProps extends UserProps {
 
 export interface MessageProps {
   // Chat page
-  id: number
+  id: string
   sender: string
   message: string
   time: string
@@ -27,9 +27,9 @@ export interface MessageProps {
 }
 
 interface BaseChatProps {
-  id: number
+  id: string
   avatarUrl?: string
-  time: string
+  time?: string
 }
 
 export interface GroupChatProps extends BaseChatProps {
@@ -43,9 +43,9 @@ export interface GroupChatProps extends BaseChatProps {
 export interface PrivateChatProps extends BaseChatProps {
   isGroupChat: false
   name: string
-  unreadCount: number
+  unreadCount?: number
   email?: string
-  messagePreview: string
+  messagePreview?: string
 }
 
 export type PreviewChatProps = GroupChatProps | PrivateChatProps
