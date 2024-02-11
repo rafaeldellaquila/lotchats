@@ -83,11 +83,16 @@ const UserForm: React.FC = () => {
 
   const updateUserInfo = async (userId: string) => {
     const avatarUrl = avatar ? await handleAvatarUpload(avatar, userId) : null
-    await setDoc(doc(db, 'users', userId), {
-      name: formData.name,
-      celNumber: formData.celNumber,
-      ...(avatarUrl && { avatarUrl })
-    })
+    await setDoc(
+      doc(db, 'users', userId),
+      {
+        name: formData.name,
+        email: formData.email,
+        celNumber: formData.celNumber,
+        ...(avatarUrl && { avatarUrl })
+      },
+      { merge: true }
+    )
   }
 
   const handleRegisterUser = async () => {
@@ -100,7 +105,7 @@ const UserForm: React.FC = () => {
         )
       await updateUserInfo(userCredential.user.uid)
       console.log('User registered successfully')
-      handleNavigate('/')
+      handleNavigate('/home')
     } catch (error) {
       console.error(error)
       console.log('Error registering user')

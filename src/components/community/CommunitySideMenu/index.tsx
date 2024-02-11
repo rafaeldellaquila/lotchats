@@ -19,7 +19,7 @@ import { primaryTypographyStyles } from '@/components/shared/Navbar/styles'
 import { useNavigation } from '@/hooks/utils/useNavigation'
 
 const menuItems = [
-  { icon: <HomeIcon />, text: 'home', to: '/' },
+  { icon: <HomeIcon />, text: 'home', to: '/home' },
   { icon: <LanguageIcon />, text: 'discover', to: '/discover' },
   { icon: <GroupAddIcon />, text: 'create_group', to: 'modal' }
 ]

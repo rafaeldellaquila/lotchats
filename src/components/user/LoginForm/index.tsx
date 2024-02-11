@@ -27,12 +27,11 @@ const LoginForm: React.FC = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password)
-      // Redireciona o usuário para a página inicial após o login bem-sucedido
       handleNavigate('/home')
     } catch (error) {
-      // Trata erros de login, como senha incorreta ou usuário não encontrado
+      // Trata erros de login
       console.error('Login error:', error)
-      setError('Failed to log in. Please check your credentials.') // Define uma mensagem de erro genérica
+      setError('Failed to log in. Please check your credentials.')
     }
   }
 

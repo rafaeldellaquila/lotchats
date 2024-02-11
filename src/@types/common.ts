@@ -6,7 +6,7 @@ export interface DrawerProps {
 
 export interface UserProps {
   name: string
-  id: number
+  id: string
   email: string
   avatarUrl: string | undefined
   celNumber: string

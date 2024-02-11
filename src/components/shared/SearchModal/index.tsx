@@ -6,26 +6,59 @@ import {
   InputAdornment,
   InputLabel,
   Modal,
-  OutlinedInput
+  OutlinedInput,
+  List,
+  ListItem,
+  ListItemText
 } from '@mui/material'
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  getFirestore
+} from 'firebase/firestore'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DrawerProps } from '@/@types/common'
+import { DrawerProps, UserProps } from '@/@types/common'
 import { searchModalStyles } from '@/components/shared/Navbar/styles'
+import { auth } from '@/firebase'
 
 const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
   const { t } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
+  const [searchResults, setSearchResults] = useState<UserProps[]>([])
+  const currentUserEmail = auth.currentUser?.email
+  const db = getFirestore()
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
   }
 
-  const handleSearchSubmit = () => {
-    console.log('Search for:', searchTerm)
-    // Adicionar Logica de pesquisa
-    onClose()
+  const handleSearchSubmit = async () => {
+    if (!searchTerm.trim()) return
+    const usersRef = collection(db, 'users')
+    const q = query(usersRef, where('email', '==', searchTerm.toLowerCase()))
+    const querySnapshot = await getDocs(q)
+    console.log(querySnapshot)
+    const results: UserProps[] = []
+    querySnapshot.forEach(doc => {
+      const userData = doc.data()
+      console.log('userData', userData)
+      if (userData.email.toLowerCase() !== currentUserEmail?.toLowerCase()) {
+        results.push({
+          id: doc.id,
+          name: userData.name,
+          email: userData.email,
+          celNumber: userData.celNumber,
+          avatarUrl: userData.avatarUrl
+        })
+      }
+    })
+    console.log(results)
+    setSearchResults(results)
+    // onClose();
   }
 
   return (
@@ -42,6 +75,12 @@ const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
             type='text'
             value={searchTerm}
             onChange={handleSearchChange}
+            onKeyDown={event => {
+              if (event.key === 'Enter') {
+                event.preventDefault()
+                handleSearchSubmit()
+              }
+            }}
             label={t('search')}
             endAdornment={
               <InputAdornment position='end'>
@@ -52,6 +91,13 @@ const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
             }
           />
         </FormControl>
+        <List>
+          {searchResults.map(user => (
+            <ListItem key={user.id}>
+              <ListItemText primary={user.name || user.email} />
+            </ListItem>
+          ))}
+        </List>
       </Box>
     </Modal>
   )
