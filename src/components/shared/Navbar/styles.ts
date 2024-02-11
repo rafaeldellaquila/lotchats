@@ -19,6 +19,8 @@ export const primaryTypographyStyles = (
 export const searchModalStyles = {
   bgcolor: 'common.white',
   boxShadow: 24,
+  display: 'flex',
+  flexDirection: 'column',
   p: 4,
   m: 4
 }

@@ -25,7 +25,6 @@ const RouterComponent = () => {
     const unsubscribe = onAuthStateChanged(auth, user => {
       dispatch(setLoading(true))
       if (user) {
-        // Criando um objeto serializável
         const userData = {
           uid: user.uid,
           email: user.email,

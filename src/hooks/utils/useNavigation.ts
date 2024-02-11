@@ -9,26 +9,26 @@ import { setLoading, setUser } from '@/redux/slices/authSlice'
 export const useNavigation = () => {
   const navigate = useNavigateRouter()
   const { toggleCreateGroupModal } = useModal()
-  const dispatch = useDispatch() // Hook do Redux para despachar ações
-  const auth = getAuth() // Inicializa o Firebase Auth
+  const dispatch = useDispatch()
+  const auth = getAuth()
 
   const handleNavigate = async (to: string | number) => {
     if (to === 'modal') {
       toggleCreateGroupModal()
     } else if (to === 'logout') {
       try {
-        await signOut(auth) // Realiza o logout no Firebase Auth
-        dispatch(setUser(null)) // Limpa o estado do usuário no Redux
-        dispatch(setLoading(false)) // Opcional: Define o estado de carregamento como falso
-        navigate('/') // Redireciona para a página de login ou inicial após o logout
+        await signOut(auth)
+        dispatch(setUser(null))
+        dispatch(setLoading(false))
+        navigate('/')
       } catch (error) {
         console.error('Falha ao realizar logout', error)
-        // Tratar o erro conforme necessário
+        // Tratar o erro
       }
     } else if (to === 0) {
-      return navigate(0) // Recarrega a página
+      return navigate(0)
     } else {
-      navigate(to as string) // Navega para a rota especificada
+      navigate(to as string)
     }
   }
 

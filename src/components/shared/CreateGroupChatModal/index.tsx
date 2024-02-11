@@ -48,7 +48,6 @@ const CreateGroupChatModal: React.FC<{
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0]
       setAvatar(file)
-      console.log(avatar)
       const reader = new FileReader()
       reader.onload = () => {
         setAvatarPreview(reader.result as string)

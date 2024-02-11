@@ -13,17 +13,20 @@ import {
 import storage from 'redux-persist/lib/storage'
 
 import authReducer from '../slices/authSlice'
+import searchReducer from '../slices/searchSlice'
 import statusReducer from '../slices/statusSlice'
 
 const persistConfig = {
   key: 'root',
   version: 1,
-  storage
+  storage,
+  blacklist: ['searchResults']
 }
 
 const rootReducer = combineReducers({
   status: statusReducer,
-  auth: authReducer
+  auth: authReducer,
+  search: searchReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

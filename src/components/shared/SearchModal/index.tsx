@@ -1,4 +1,4 @@
-import { Search as SearchIcon } from '@mui/icons-material'
+import { Search as SearchIcon, Close as CloseIcon } from '@mui/icons-material'
 import {
   Box,
   FormControl,
@@ -6,10 +6,7 @@ import {
   InputAdornment,
   InputLabel,
   Modal,
-  OutlinedInput,
-  List,
-  ListItem,
-  ListItemText
+  OutlinedInput
 } from '@mui/material'
 import {
   collection,
@@ -18,57 +15,68 @@ import {
   getDocs,
   getFirestore
 } from 'firebase/firestore'
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
+
+import { searchModalStyles } from '../Navbar/styles'
 
 import { DrawerProps, UserProps } from '@/@types/common'
-import { searchModalStyles } from '@/components/shared/Navbar/styles'
 import { auth } from '@/firebase'
+import { useNavigation } from '@/hooks/utils/useNavigation'
+import { setSearchResults } from '@/redux/slices/searchSlice'
 
 const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
+  const dispatch = useDispatch()
   const { t } = useTranslation()
-  const [searchTerm, setSearchTerm] = useState('')
-  const [searchResults, setSearchResults] = useState<UserProps[]>([])
+  const [searchTerm, setSearchTerm] = useState<string>('')
   const currentUserEmail = auth.currentUser?.email
   const db = getFirestore()
+  const { handleNavigate } = useNavigation()
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchTerm(event.target.value)
   }
 
-  const handleSearchSubmit = async () => {
+  const handleSearchSubmit = async (): Promise<void> => {
     if (!searchTerm.trim()) return
     const usersRef = collection(db, 'users')
-    const q = query(usersRef, where('email', '==', searchTerm.toLowerCase()))
-    const querySnapshot = await getDocs(q)
-    console.log(querySnapshot)
-    const results: UserProps[] = []
-    querySnapshot.forEach(doc => {
-      const userData = doc.data()
-      console.log('userData', userData)
-      if (userData.email.toLowerCase() !== currentUserEmail?.toLowerCase()) {
-        results.push({
-          id: doc.id,
-          name: userData.name,
-          email: userData.email,
-          celNumber: userData.celNumber,
-          avatarUrl: userData.avatarUrl
-        })
-      }
-    })
-    console.log(results)
-    setSearchResults(results)
-    // onClose();
+    const searchQuery = query(
+      usersRef,
+      where('email', '==', searchTerm.toLowerCase())
+    )
+    const querySnapshot = await getDocs(searchQuery)
+
+    const results: UserProps[] = querySnapshot.docs
+      .map(
+        doc =>
+          ({
+            id: doc.id,
+            name: doc.data().name,
+            email: doc.data().email,
+            avatarUrl: doc.data().avatarUrl,
+            celNumber: doc.data().celNumber
+          }) as UserProps
+      )
+      .filter(
+        user => user.email.toLowerCase() !== currentUserEmail?.toLowerCase()
+      )
+
+    dispatch(setSearchResults(results))
+    handleNavigate('/discover')
+    onClose?.()
   }
 
   return (
     <Modal open={open} onClose={onClose} aria-labelledby='search-modal'>
       <Box sx={searchModalStyles}>
-        <FormControl
-          sx={{ m: 1, width: '100%' }}
-          variant='outlined'
-          size='small'
+        <IconButton
+          onClick={onClose}
+          sx={{ alignSelf: 'flex-end', p: 0, mb: 4 }}
         >
+          <CloseIcon />
+        </IconButton>
+        <FormControl sx={{ width: '100%' }} variant='outlined' size='small'>
           <InputLabel htmlFor='adornment-search'>{t('search')}</InputLabel>
           <OutlinedInput
             id='adornment-search'
@@ -91,13 +99,6 @@ const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
             }
           />
         </FormControl>
-        <List>
-          {searchResults.map(user => (
-            <ListItem key={user.id}>
-              <ListItemText primary={user.name || user.email} />
-            </ListItem>
-          ))}
-        </List>
       </Box>
     </Modal>
   )

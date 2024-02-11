@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-// Definindo a estrutura do objeto serializável do usuário
 interface AuthUser {
   uid: string
   email: string | null

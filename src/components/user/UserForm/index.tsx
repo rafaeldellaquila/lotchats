@@ -160,7 +160,6 @@ const UserForm: React.FC = () => {
               email: user.email || '',
               celNumber: userData.celNumber
             }))
-            // Set avatarPreview if avatarUrl exists
             if (userData.avatarUrl) {
               setAvatarPreview(userData.avatarUrl)
             }

@@ -8,9 +8,9 @@ import RouterComponent from './routes'
 import '@/firebase'
 
 createRoot(document.getElementById('root')!).render(
-  <Provider>
-    <BrowserRouter>
+  <BrowserRouter>
+    <Provider>
       <RouterComponent />
-    </BrowserRouter>
-  </Provider>
+    </Provider>
+  </BrowserRouter>
 )
