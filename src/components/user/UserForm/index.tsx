@@ -23,6 +23,7 @@ interface FormData {
   password: string
   confirmPassword?: string
   currentPassword?: string
+  avatarUrl?: string
 }
 
 const UserForm: React.FC = () => {
@@ -113,23 +114,45 @@ const UserForm: React.FC = () => {
 
   const handleUpdateUser = async (user: User) => {
     try {
+      const userDataUpdate: Partial<FormData> = {}
+      const docSnap = await getDoc(doc(db, 'users', user.uid))
+
       if (
         formData.password &&
         formData.confirmPassword &&
-        formData.password === formData.confirmPassword
+        formData.password === formData.confirmPassword &&
+        formData.currentPassword
       ) {
-        if (formData.currentPassword) {
-          const credential = EmailAuthProvider.credential(
-            user.email!,
-            formData.currentPassword
-          )
-          await reauthenticateWithCredential(user, credential)
-          await updatePassword(user, formData.password)
-        }
+        const credential = EmailAuthProvider.credential(
+          user.email!,
+          formData.currentPassword
+        )
+        await reauthenticateWithCredential(user, credential)
+        await updatePassword(user, formData.password)
       }
-      await updateUserInfo(user.uid)
-      console.log('User updated successfully')
-      handleNavigate(0)
+
+      if (formData.name !== user.displayName) {
+        userDataUpdate.name = formData.name
+      }
+
+      if (docSnap.exists() && formData.celNumber !== docSnap.data().celNumber) {
+        userDataUpdate.celNumber = formData.celNumber
+      }
+
+      if (Object.keys(userDataUpdate).length > 0 || avatar) {
+        if (avatar) {
+          const avatarUrl = await handleAvatarUpload(avatar, user.uid)
+          if (avatarUrl) userDataUpdate.avatarUrl = avatarUrl
+        }
+
+        await setDoc(doc(db, 'users', user.uid), userDataUpdate, {
+          merge: true
+        })
+
+        console.log('User updated successfully')
+      }
+
+      handleNavigate('/home')
     } catch (error) {
       console.error(error)
       console.log('Error updating user')
@@ -144,6 +167,7 @@ const UserForm: React.FC = () => {
     }
 
     const user = auth.currentUser
+
     if (isConfigPage && user) {
       await handleUpdateUser(user)
     } else {
@@ -153,19 +177,27 @@ const UserForm: React.FC = () => {
 
   useEffect(() => {
     if (isConfigPage) {
+      console.log('isConfigPage', isConfigPage)
       const user = auth.currentUser
       if (user) {
+        console.log('user', user)
         const userRef = doc(db, 'users', user.uid)
+        console.log('userRef', userRef)
+
         getDoc(userRef).then(docSnap => {
           if (docSnap.exists()) {
             const userData = docSnap.data()
-            setFormData(prevState => ({
-              ...prevState,
-              name: userData.name,
-              email: user.email || '',
-              celNumber: userData.celNumber
-            }))
+            console.log('userData', userData)
+            setFormData({
+              name: userData.name || '',
+              email: userData.email || user.email || '',
+              celNumber: userData.celNumber || '',
+              password: '',
+              confirmPassword: '',
+              currentPassword: ''
+            })
             if (userData.avatarUrl) {
+              console.log('userData.avatarUrl', userData.avatarUrl)
               setAvatarPreview(userData.avatarUrl)
             }
           }
@@ -202,15 +234,14 @@ const UserForm: React.FC = () => {
         label={t('name')}
         name='name'
         autoComplete='name'
-        autoFocus
-        disabled={isConfigPage}
         value={formData.name}
         onChange={handleChange}
+        disabled={isConfigPage}
       />
+
       <TextField
         margin='normal'
         required={isRegisterPage}
-        disabled={isConfigPage}
         fullWidth
         id='email'
         label={t('email')}
@@ -218,11 +249,12 @@ const UserForm: React.FC = () => {
         autoComplete='email'
         value={formData.email}
         onChange={handleChange}
+        disabled={isConfigPage}
       />
+
       <TextField
         margin='normal'
         required={isRegisterPage}
-        disabled={isConfigPage}
         fullWidth
         id='celNumber'
         label={t('cel_number')}
@@ -230,7 +262,9 @@ const UserForm: React.FC = () => {
         autoComplete='tel'
         value={formData.celNumber}
         onChange={handleChange}
+        disabled={isConfigPage}
       />
+
       {isRegisterPage || isConfigPage ? (
         <>
           <Typography component='h1' variant='h5'>
@@ -239,7 +273,12 @@ const UserForm: React.FC = () => {
           {isConfigPage && (
             <TextField
               margin='normal'
-              required
+              required={
+                isRegisterPage ||
+                (isConfigPage &&
+                  formData.password.length > 0 &&
+                  formData.confirmPassword !== undefined)
+              }
               fullWidth
               id='currentPassword'
               label={t('current_password')}
@@ -252,7 +291,7 @@ const UserForm: React.FC = () => {
           )}
           <TextField
             margin='normal'
-            required
+            required={isRegisterPage}
             fullWidth
             id='password'
             label={isRegisterPage ? t('password') : t('new_password')}
@@ -264,7 +303,7 @@ const UserForm: React.FC = () => {
           />
           <TextField
             margin='normal'
-            required
+            required={isRegisterPage}
             fullWidth
             id='confirmPassword'
             label={t('confirm_password')}
