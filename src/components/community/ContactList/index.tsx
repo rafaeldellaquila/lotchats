@@ -7,9 +7,17 @@ import {
   ListItemText,
   Badge
 } from '@mui/material'
+import {
+  doc,
+  getDoc,
+  getFirestore,
+  serverTimestamp,
+  setDoc
+} from 'firebase/firestore'
 import { useTranslation } from 'react-i18next'
 
 import { ContactProps } from '@/@types/common'
+import { auth } from '@/firebase'
 import { useNavigation } from '@/hooks/utils/useNavigation'
 
 const ContactList: React.FC<{ contacts: ContactProps[] }> = ({ contacts }) => {
@@ -17,10 +25,25 @@ const ContactList: React.FC<{ contacts: ContactProps[] }> = ({ contacts }) => {
   const { handleNavigate } = useNavigation()
 
   const handleChatClick = async (contactId: string) => {
-    handleNavigate(`/chat/${contactId}`)
-  }
+    const db = getFirestore()
+    const currentUser = auth.currentUser
 
-  console.log('contacts', contacts)
+    if (currentUser) {
+      const userIds = [currentUser.uid, contactId].sort()
+      const chatId = userIds.join('_')
+      const chatDocRef = doc(db, 'chats', chatId)
+      const chatDocSnap = await getDoc(chatDocRef)
+
+      if (!chatDocSnap.exists()) {
+        await setDoc(chatDocRef, {
+          members: userIds,
+          createdAt: serverTimestamp()
+        })
+      }
+
+      handleNavigate(`/chat/${chatId}`)
+    }
+  }
 
   return (
     <List>
@@ -31,12 +54,15 @@ const ContactList: React.FC<{ contacts: ContactProps[] }> = ({ contacts }) => {
         contacts.map((contact, index) => (
           <ListItem
             key={index}
-            onClick={() => handleChatClick(contact.id)} // Direcionar para o chat
+            onClick={() => handleChatClick(contact.id)}
             sx={{ cursor: 'pointer' }}
           >
             <ListItemIcon>
               <Badge color='error' overlap='circular' variant='dot'>
-                <Avatar src={contact.avatar} sx={{ width: 24, height: 24 }} />
+                <Avatar
+                  src={contact.avatarUrl}
+                  sx={{ width: 24, height: 24 }}
+                />
               </Badge>
             </ListItemIcon>
             <ListItemText primary={contact.name} />

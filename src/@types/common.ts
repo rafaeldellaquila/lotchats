@@ -15,8 +15,7 @@ export interface UserProps {
 export interface ContactProps {
   id: string
   name: string
-  avatar: string
-  status: string
+  avatarUrl: string
 }
 
 export interface ChatProps extends UserProps {
