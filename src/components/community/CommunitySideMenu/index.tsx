@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next'
 
 import ContactList from '../ContactList'
 
+import { ContactProps } from '@/@types/common'
 import { primaryTypographyStyles } from '@/components/shared/Navbar/styles'
 import { useNavigation } from '@/hooks/utils/useNavigation'
 
@@ -24,7 +25,9 @@ const menuItems = [
   { icon: <GroupAddIcon />, text: 'create_group', to: 'modal' }
 ]
 
-const CommunitySideMenu: React.FC = () => {
+const CommunitySideMenu: React.FC<{ contacts: ContactProps[] }> = ({
+  contacts
+}) => {
   const { t } = useTranslation()
   const { handleNavigate } = useNavigation()
 
@@ -46,7 +49,7 @@ const CommunitySideMenu: React.FC = () => {
         ))}
       </List>
       <Divider sx={{ m: '.5rem', borderColor: 'transparent' }} />
-      <ContactList />
+      <ContactList contacts={contacts} />
     </Paper>
   )
 }

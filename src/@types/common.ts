@@ -12,6 +12,13 @@ export interface UserProps {
   celNumber: string
 }
 
+export interface ContactProps {
+  id: string
+  name: string
+  avatar: string
+  status: string
+}
+
 export interface ChatProps extends UserProps {
   // ChatCard
   unreadCount: number

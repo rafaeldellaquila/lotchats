@@ -5,11 +5,17 @@ type ModalContextType = {
   toggleCreateGroupModal: () => void
   isSearchModalOpen: boolean
   toggleSearchModal: () => void
+  toggleAddPersonModal: (id?: string) => void
+  isAddPersonModalOpen: boolean
+  selectedContactId: string | undefined
 }
 
 export const ModalContext = createContext<ModalContextType>({
   isCreateGroupModalOpen: false,
   toggleCreateGroupModal: () => {},
   isSearchModalOpen: false,
-  toggleSearchModal: () => {}
+  toggleSearchModal: () => {},
+  toggleAddPersonModal: () => {},
+  isAddPersonModalOpen: false,
+  selectedContactId: undefined
 })

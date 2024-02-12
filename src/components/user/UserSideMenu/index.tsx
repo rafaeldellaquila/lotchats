@@ -17,7 +17,6 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import { primaryTypographyStyles } from '@/components/shared/Navbar/styles'
-import StatusSelect from '@/components/user/StatusSelect'
 import { useNavigation } from '@/hooks/utils/useNavigation'
 
 const menuItems = [
@@ -45,7 +44,6 @@ const UserSideMenu: React.FC = () => {
           John Doe
         </Typography>
       </Box>
-      <StatusSelect />
       <Divider sx={{ m: '.5rem', borderColor: 'transparent' }} />
       <List sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
         {menuItems.map((item, index) => (

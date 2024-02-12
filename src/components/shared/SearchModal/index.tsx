@@ -41,11 +41,13 @@ const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
   const handleSearchSubmit = async (): Promise<void> => {
     if (!searchTerm.trim()) return
     const usersRef = collection(db, 'users')
+    console.log('usersRef', usersRef)
     const searchQuery = query(
       usersRef,
       where('email', '==', searchTerm.toLowerCase())
     )
     const querySnapshot = await getDocs(searchQuery)
+    console.log('querySnapshot', searchQuery)
 
     const results: UserProps[] = querySnapshot.docs
       .map(
@@ -61,6 +63,7 @@ const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
       .filter(
         user => user.email.toLowerCase() !== currentUserEmail?.toLowerCase()
       )
+    console.log('results', results)
 
     dispatch(setSearchResults(results))
     handleNavigate('/discover')

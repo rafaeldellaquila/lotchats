@@ -1,12 +1,27 @@
 import { Send as SendIcon } from '@mui/icons-material'
 import { Box, IconButton, InputBase } from '@mui/material'
+import {
+  addDoc,
+  collection,
+  getFirestore,
+  serverTimestamp
+} from 'firebase/firestore'
 import { useState } from 'react'
 
-const ChatInput: React.FC = () => {
-  const [message, setMessage] = useState('')
+import { auth } from '@/firebase'
 
-  const sendMessage = () => {
-    console.log(message) // Implementar lógica de mensagens
+const ChatInput: React.FC<{ chatId: string }> = ({ chatId }) => {
+  const [message, setMessage] = useState('')
+  const db = getFirestore()
+
+  const sendMessage = async () => {
+    if (message.trim() === '') return
+    const messagesRef = collection(db, `chats/${chatId}/messages`)
+    await addDoc(messagesRef, {
+      text: message,
+      senderId: auth.currentUser?.uid,
+      timestamp: serverTimestamp()
+    })
     setMessage('')
   }
 

@@ -1,9 +1,10 @@
 import { Global } from '@emotion/react'
 import { ThemeProvider } from '@mui/material'
-import { StrictMode } from 'react'
+import { StrictMode, useState } from 'react'
 import { Provider as StoreProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
+import AddContactDialog from '@/components/shared/AddContactDialog'
 import CreateGroupChatModal from '@/components/shared/CreateGroupChatModal'
 import SearchModal from '@/components/shared/SearchModal'
 import { ModalContext } from '@/context/ModalContext'
@@ -15,6 +16,16 @@ import theme from '@theme/index'
 const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isCreateGroupModalOpen, toggleCreateGroupModal] = useToggle()
   const [isSearchModalOpen, toggleSearchModal] = useToggle()
+  const [isAddPersonModalOpen, toggleAddPersonModal] = useToggle()
+  const [selectedContactId, setSelectedContactId] = useState<
+    string | undefined
+  >(undefined)
+
+  const handleToggleAddPersonModal = (id: string | undefined) => {
+    toggleAddPersonModal()
+    if (id) setSelectedContactId(id)
+    else if (!isAddPersonModalOpen) setSelectedContactId(undefined)
+  }
 
   return (
     <StrictMode>
@@ -27,7 +38,10 @@ const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 isCreateGroupModalOpen,
                 toggleCreateGroupModal,
                 isSearchModalOpen,
-                toggleSearchModal
+                toggleSearchModal,
+                isAddPersonModalOpen,
+                toggleAddPersonModal: handleToggleAddPersonModal,
+                selectedContactId
               }}
             >
               {children}
@@ -38,6 +52,10 @@ const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               <SearchModal
                 open={isSearchModalOpen}
                 onClose={toggleSearchModal}
+              />
+              <AddContactDialog
+                open={isAddPersonModalOpen}
+                onClose={toggleAddPersonModal}
               />
             </ModalContext.Provider>
           </ThemeProvider>

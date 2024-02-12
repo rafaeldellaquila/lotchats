@@ -1,19 +1,70 @@
 import { Box, useTheme } from '@mui/material'
+import {
+  collection,
+  doc,
+  getDoc,
+  getFirestore,
+  onSnapshot,
+  orderBy,
+  query
+} from 'firebase/firestore'
+import { useEffect, useState } from 'react'
 
 import ChatInput from '../../shared/ChatInput'
 import ChatNavBar from '../../shared/ChatNavBar'
 import MessageBubble from '../../shared/MessageBubble'
 
 import { MessageProps } from '@/@types/common'
+import { auth } from '@/firebase'
 
 interface ChatProps {
-  messages: MessageProps[]
-  receiver: string | undefined
+  chatId: string
   onBack: () => void
 }
 
-const Chat: React.FC<ChatProps> = ({ messages, receiver, onBack }) => {
+const PrivateChat: React.FC<ChatProps> = ({ chatId, onBack }) => {
+  const db = getFirestore()
   const theme = useTheme()
+  const [messages, setMessages] = useState<MessageProps[]>([])
+  const [receiverName, setReceiverName] = useState<string>('')
+  const [receiverId, setReceiverId] = useState<string>('')
+
+  useEffect(() => {
+    const chatRef = doc(db, `chats`, chatId)
+    getDoc(chatRef).then(docSnap => {
+      if (docSnap.exists()) {
+        const chatData = docSnap.data()
+        const members = chatData.members || []
+        const receiverId = members.find(
+          (p: string) => p !== auth.currentUser?.uid
+        )
+
+        if (receiverId) {
+          const receiverRef = doc(db, 'users', receiverId)
+          getDoc(receiverRef).then(userSnap => {
+            if (userSnap.exists()) {
+              console.log('userSnap.data()', userSnap.data())
+              setReceiverName(userSnap.data().name)
+              setReceiverId(receiverId)
+            }
+          })
+        }
+      }
+    })
+
+    const messagesRef = collection(db, `chats/${chatId}/messages`)
+    const q = query(messagesRef, orderBy('timestamp', 'asc'))
+
+    const unsubscribe = onSnapshot(q, querySnapshot => {
+      const fetchedMessages = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as MessageProps[]
+      setMessages(fetchedMessages)
+    })
+
+    return () => unsubscribe()
+  }, [db, chatId])
 
   return (
     <Box
@@ -23,7 +74,7 @@ const Chat: React.FC<ChatProps> = ({ messages, receiver, onBack }) => {
         minHeight: '100%'
       }}
     >
-      <ChatNavBar receiver={receiver} onBack={onBack} isGroup={false} />
+      <ChatNavBar receiver={receiverName} onBack={onBack} isGroup={false} />
       <Box
         sx={{
           flexGrow: 1,
@@ -48,10 +99,10 @@ const Chat: React.FC<ChatProps> = ({ messages, receiver, onBack }) => {
           m: 2
         }}
       >
-        <ChatInput />
+        <ChatInput chatId={receiverId} />
       </Box>
     </Box>
   )
 }
 
-export default Chat
+export default PrivateChat

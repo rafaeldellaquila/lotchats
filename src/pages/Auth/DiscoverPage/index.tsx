@@ -11,11 +11,12 @@ import {
 const DiscoverPage: React.FC = () => {
   const dispatch = useDispatch()
   const searchResults = useSelector(selectSearchResults)
-  // useEffect(() => {
-  //   return () => {
-  //     dispatch(clearSearchResults())
-  //   }
-  // }, [dispatch])
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearSearchResults())
+    }
+  }, [dispatch])
 
   return (
     <Box sx={{ m: 2 }}>

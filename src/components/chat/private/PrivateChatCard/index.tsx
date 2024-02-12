@@ -5,12 +5,13 @@ import {
   Box,
   Card,
   CardActionArea,
-  IconButton,
   Typography
 } from '@mui/material'
+import { useEffect, useState } from 'react'
 
 import { PrivateChatProps } from '@/@types/common'
-import { useNavigation } from '@/hooks/utils/useNavigation'
+import { useModal } from '@/hooks/utils/useModal'
+import { checkContactAdded } from '@/utils/checkContactAdded'
 
 const PrivateChatCard: React.FC<PrivateChatProps> = ({
   avatarUrl,
@@ -21,13 +22,21 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
   email,
   id
 }) => {
-  const { handleNavigate } = useNavigation()
+  const { toggleAddPersonModal } = useModal()
+  const [isContactAdded, setIsContactAdded] = useState<boolean>(false)
 
   const handleCardClick = () => {
-    //  lógica de navegação
     console.log('clique')
-    // handleNavigate(`/chat/${id}`)
   }
+
+  useEffect(() => {
+    const checkIfContactIsAdded = async () => {
+      const contactAdded = await checkContactAdded(id)
+      setIsContactAdded(contactAdded)
+    }
+
+    checkIfContactIsAdded()
+  }, [id, toggleAddPersonModal])
 
   return (
     <Card
@@ -95,17 +104,19 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
           {time}
         </Typography>
       </CardActionArea>
-      <CardActionArea
-        onClick={handleCardClick}
-        sx={{
-          display: 'flex',
-          flex: 1,
-          alignItems: 'center',
-          p: 2
-        }}
-      >
-        <PersonAddIcon color='success' />
-      </CardActionArea>
+      {!isContactAdded && (
+        <CardActionArea
+          onClick={() => toggleAddPersonModal(id)}
+          sx={{
+            display: 'flex',
+            flex: 1,
+            alignItems: 'center',
+            p: 2
+          }}
+        >
+          <PersonAddIcon color='success' />
+        </CardActionArea>
+      )}
     </Card>
   )
 }
