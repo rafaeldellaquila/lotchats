@@ -34,6 +34,7 @@ const UserSideMenu: React.FC = () => {
     name: 'loading',
     avatarUrl: ''
   })
+
   const db = getFirestore()
   const dispatch = useDispatch()
   const navigate = useNavigate()

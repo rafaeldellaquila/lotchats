@@ -1,3 +1,4 @@
+import { CircularProgress } from '@mui/material'
 import {
   collection,
   doc,
@@ -19,8 +20,11 @@ import { auth } from '@/firebase'
 const HomePage: React.FC = () => {
   const { t } = useTranslation()
   const [chats, setChats] = useState<PreviewChatProps[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
+    setIsLoading(true)
+
     const fetchChats = async () => {
       const db = getFirestore()
       const userId = auth.currentUser?.uid
@@ -39,6 +43,7 @@ const HomePage: React.FC = () => {
             limit(1)
           )
           const messagesSnapshot = await getDocs(messagesQuery)
+
           if (!messagesSnapshot.empty) {
             const lastMessage = messagesSnapshot.docs[0].data()
             const otherMemberId = chatDoc
@@ -62,10 +67,15 @@ const HomePage: React.FC = () => {
       setChats(
         chatsData.filter((chat): chat is PreviewChatProps => chat !== null)
       )
+      setIsLoading(false)
     }
 
     fetchChats()
   }, [])
+
+  if (isLoading) {
+    return <CircularProgress />
+  }
 
   return (
     <>

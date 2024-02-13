@@ -2,7 +2,7 @@ import { PersonAddAlt1 as PersonAddIcon } from '@mui/icons-material'
 import { Avatar, Box, Card, CardActionArea, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 
-import { UsePrivateChat } from '@/hooks/chat/UsePrivateChat'
+import { usePrivateChat } from '@/hooks/chat/usePrivateChat'
 import { useModal } from '@/hooks/utils/useModal'
 import { checkContactAdded } from '@/utils/checkContactAdded'
 
@@ -24,7 +24,7 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
 }) => {
   const { toggleAddPersonModal } = useModal()
   const [isContactAdded, setIsContactAdded] = useState<boolean>(false)
-  const { handleContactChatClick } = UsePrivateChat()
+  const { handleContactChatClick } = usePrivateChat()
 
   useEffect(() => {
     let isMounted = true

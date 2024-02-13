@@ -5,8 +5,11 @@ import {
   IconButton,
   Toolbar,
   Typography,
-  Avatar
+  Avatar,
+  CircularProgress
 } from '@mui/material'
+import { doc, getDoc, getFirestore } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
@@ -14,6 +17,7 @@ import CommunitySideMenu from '../../community/CommunitySideMenu'
 import UserSideMenu from '../../user/UserSideMenu'
 import Drawer from '../Drawer'
 
+import { auth } from '@/firebase'
 import { useMediaQuery } from '@/hooks/utils/useMediaQueries'
 import { useModal } from '@/hooks/utils/useModal'
 import { useToggle } from '@/hooks/utils/useToggle'
@@ -23,7 +27,13 @@ const NavBar: React.FC = () => {
   const [isLargeScreen] = useMediaQuery()
   const { pathname } = useLocation()
   const { toggleSearchModal } = useModal()
+  const db = getFirestore()
+  const [currentUser, setCurrentUser] = useState<{
+    name: string
+    avatarUrl: string
+  }>()
 
+  const [isLoading, setIsLoading] = useState<boolean>()
   const [isCommunityDrawerOpen, toggleCommunityDrawer] = useToggle()
   const [isUserDrawerOpen, toggleUserDrawer] = useToggle()
 
@@ -32,6 +42,30 @@ const NavBar: React.FC = () => {
     if (pathname === '/discover') return t('discover')
     if (pathname === '/chat') return ' '
     return
+  }
+
+  useEffect(() => {
+    setIsLoading(false)
+    const fetchUserData = async () => {
+      const userAuth = auth.currentUser
+      if (userAuth) {
+        const userRef = doc(db, 'users', userAuth.uid)
+        const userSnap = await getDoc(userRef)
+        if (userSnap.exists()) {
+          const userData = userSnap.data()
+          setCurrentUser({ name: userData.name, avatarUrl: userData.avatarUrl })
+        } else {
+          console.log('Usuário não encontrado')
+        }
+      }
+    }
+
+    setIsLoading(true)
+    fetchUserData()
+  }, [db])
+
+  if (isLoading && currentUser === undefined) {
+    return <CircularProgress />
   }
 
   return (
@@ -82,7 +116,12 @@ const NavBar: React.FC = () => {
 
           {!isLargeScreen && (
             <>
-              <Avatar onClick={toggleUserDrawer}>H</Avatar>
+              <Avatar
+                onClick={toggleUserDrawer}
+                sx={{ mr: '1rem' }}
+                src={currentUser !== undefined ? currentUser.avatarUrl : ' '}
+                alt={currentUser !== undefined ? currentUser.name : ' '}
+              />
               <Drawer
                 isOpen={isUserDrawerOpen}
                 toggle={toggleUserDrawer}
