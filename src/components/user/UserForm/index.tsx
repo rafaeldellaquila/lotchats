@@ -175,17 +175,13 @@ const UserForm: React.FC = () => {
 
   useEffect(() => {
     if (isConfigPage) {
-      console.log('isConfigPage', isConfigPage)
       const user = auth.currentUser
       if (user) {
-        console.log('user', user)
         const userRef = doc(db, 'users', user.uid)
-        console.log('userRef', userRef)
 
         getDoc(userRef).then(docSnap => {
           if (docSnap.exists()) {
             const userData = docSnap.data()
-            console.log('userData', userData)
             setFormData({
               name: userData.name || '',
               email: userData.email || user.email || '',
@@ -195,7 +191,6 @@ const UserForm: React.FC = () => {
               currentPassword: ''
             })
             if (userData.avatarUrl) {
-              console.log('userData.avatarUrl', userData.avatarUrl)
               setAvatarPreview(userData.avatarUrl)
             }
           }

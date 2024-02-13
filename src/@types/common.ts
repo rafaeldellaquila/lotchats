@@ -14,6 +14,13 @@ export interface UserProps {
   celNumber: string
 }
 
+export interface PreviewChatProps {
+  id: string
+  avatarUrl: string
+  name: string
+  messagePreview: string
+}
+
 export interface ContactProps {
   id: string
   name: string
@@ -33,27 +40,3 @@ export interface MessageProps {
   timestamp: Timestamp
   //  isOwner: boolean
 }
-
-interface BaseChatProps {
-  id: string
-  avatarUrl?: string
-  time?: string
-}
-
-export interface GroupChatProps extends BaseChatProps {
-  isGroupChat: true
-  groupName: string
-  qtyMember: number
-  members: UserProps[]
-  tags: string[]
-}
-
-export interface PrivateChatProps extends BaseChatProps {
-  isGroupChat: false
-  name: string
-  unreadCount?: number
-  email?: string
-  messagePreview?: string
-}
-
-export type PreviewChatProps = GroupChatProps | PrivateChatProps

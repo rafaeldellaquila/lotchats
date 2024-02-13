@@ -29,19 +29,6 @@ const CommunitySideMenu: React.FC = () => {
   const { t } = useTranslation()
   const { toggleCreateGroupModal } = useModal()
   const [contacts, setContacts] = useState<ContactProps[]>([])
-  const menuItems = [
-    { icon: <HomeIcon />, text: 'home', onClick: navigate('/home') },
-    {
-      icon: <LanguageIcon />,
-      text: 'discover',
-      onClick: navigate('/discover')
-    },
-    {
-      icon: <GroupAddIcon />,
-      text: 'create_group',
-      onClick: toggleCreateGroupModal()
-    }
-  ]
 
   useEffect(() => {
     const db = getFirestore()
@@ -81,19 +68,40 @@ const CommunitySideMenu: React.FC = () => {
   return (
     <Paper elevation={1} sx={{ height: '100%' }}>
       <List>
-        {menuItems.map((item, index) => (
-          <ListItem
-            key={index}
-            onClick={() => item.onClick}
-            sx={{ cursor: 'pointer' }}
-          >
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText
-              primary={t(item.text)}
-              primaryTypographyProps={primaryTypographyStyles()}
-            />
-          </ListItem>
-        ))}
+        <ListItem onClick={() => navigate('/home')} sx={{ cursor: 'pointer' }}>
+          <ListItemIcon>
+            {' '}
+            <HomeIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary={t('home')}
+            primaryTypographyProps={primaryTypographyStyles()}
+          />
+        </ListItem>
+        <ListItem
+          onClick={() => navigate('/discover')}
+          sx={{ cursor: 'pointer' }}
+        >
+          <ListItemIcon>
+            <LanguageIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary={t('discover')}
+            primaryTypographyProps={primaryTypographyStyles()}
+          />
+        </ListItem>
+        <ListItem
+          onClick={() => toggleCreateGroupModal()}
+          sx={{ cursor: 'pointer' }}
+        >
+          <ListItemIcon>
+            <GroupAddIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary={t('create_group')}
+            primaryTypographyProps={primaryTypographyStyles()}
+          />
+        </ListItem>
       </List>
       <Divider sx={{ m: '.5rem', borderColor: 'transparent' }} />
       <ContactList contacts={contacts} />

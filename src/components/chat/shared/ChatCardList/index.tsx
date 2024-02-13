@@ -51,15 +51,14 @@ const ChatCardList: React.FC<ChatCardListProps> = ({ chats, title }) => {
               avatarUrl={chat.avatarUrl}
               name={chat.name}
               messagePreview={chat.messagePreview}
-              unreadCount={chat.unreadCount}
-              time={chat.time}
-              email={chat.email}
             />
           )
         )}
-      <Button onClick={handleLoadChats} variant='outlined'>
-        {visibleCount >= chats.length ? t('see_less') : t('see_all')}
-      </Button>
+      {chats.length >= 3 && (
+        <Button onClick={handleLoadChats} variant='outlined'>
+          {visibleCount >= chats.length ? t('see_less') : t('see_all')}
+        </Button>
+      )}
     </Box>
   )
 }

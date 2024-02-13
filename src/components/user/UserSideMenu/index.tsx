@@ -14,20 +14,59 @@ import {
   Box,
   Paper
 } from '@mui/material'
+import { signOut } from 'firebase/auth'
+import { doc, getDoc, getFirestore } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 import { primaryTypographyStyles } from '@/components/shared/Navbar/styles'
-import { useNavigation } from '@/hooks/utils/useNavigation'
-
-const menuItems = [
-  { icon: <GroupAddIcon />, text: 'create_group', to: 'modal' },
-  { icon: <LanguageIcon />, text: 'config', to: '/config' },
-  { icon: <MeetingRoomIcon color='error' />, text: 'quit', to: 'logout' }
-]
+import { auth } from '@/firebase'
+import { useModal } from '@/hooks/utils/useModal'
+import { setLoading, setUser } from '@/redux/slices/authSlice'
 
 const UserSideMenu: React.FC = () => {
   const { t } = useTranslation()
-  const { handleNavigate } = useNavigation()
+  const { toggleCreateGroupModal } = useModal()
+
+  const [currentUser, setCurrentUser] = useState({
+    name: 'loading',
+    avatarUrl: ''
+  })
+  const db = getFirestore()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth)
+      dispatch(setUser(null))
+      dispatch(setLoading(false))
+      navigate('/')
+    } catch (error) {
+      console.error('Falha ao realizar logout', error)
+      // Tratar o erro
+    }
+  }
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userAuth = auth.currentUser
+      if (userAuth) {
+        const userRef = doc(db, 'users', userAuth.uid)
+        const userSnap = await getDoc(userRef)
+        if (userSnap.exists()) {
+          const userData = userSnap.data()
+          setCurrentUser({ name: userData.name, avatarUrl: userData.avatarUrl })
+        } else {
+          console.log('Usuário não encontrado')
+        }
+      }
+    }
+
+    fetchUserData()
+  }, [db])
 
   return (
     <Paper sx={{ height: '100%', overflow: 'hidden' }} elevation={1}>
@@ -39,28 +78,56 @@ const UserSideMenu: React.FC = () => {
           p: '1rem'
         }}
       >
-        <Avatar sx={{ mr: '1rem' }}>H</Avatar>
+        <Avatar
+          sx={{ mr: '1rem' }}
+          src={currentUser.avatarUrl}
+          alt={currentUser.name}
+        />
         <Typography variant='body1' fontWeight='600'>
-          John Doe
+          {currentUser.name}
         </Typography>
       </Box>
       <Divider sx={{ m: '.5rem', borderColor: 'transparent' }} />
       <List sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        {menuItems.map((item, index) => (
-          <ListItem
-            key={index}
-            onClick={() => handleNavigate(item.to)}
-            sx={{ cursor: 'pointer' }}
-          >
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText
-              primary={t(item.text)}
-              primaryTypographyProps={primaryTypographyStyles({
-                color: index === menuItems.length - 1 ? 'error' : 'grey.100'
-              })}
-            />
-          </ListItem>
-        ))}
+        <ListItem
+          onClick={() => toggleCreateGroupModal}
+          sx={{ cursor: 'pointer' }}
+        >
+          <ListItemIcon>
+            <GroupAddIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary={t('create_group')}
+            primaryTypographyProps={primaryTypographyStyles({
+              color: 'grey.100'
+            })}
+          />
+        </ListItem>
+        <ListItem
+          onClick={() => navigate('/config')}
+          sx={{ cursor: 'pointer' }}
+        >
+          <ListItemIcon>
+            <LanguageIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary={t('config')}
+            primaryTypographyProps={primaryTypographyStyles({
+              color: 'grey.100'
+            })}
+          />
+        </ListItem>
+        <ListItem onClick={() => handleLogout()} sx={{ cursor: 'pointer' }}>
+          <ListItemIcon>
+            <MeetingRoomIcon color='error' />
+          </ListItemIcon>
+          <ListItemText
+            primary={t('quit')}
+            primaryTypographyProps={primaryTypographyStyles({
+              color: 'error'
+            })}
+          />
+        </ListItem>
       </List>
     </Paper>
   )

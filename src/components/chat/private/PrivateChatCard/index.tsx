@@ -1,25 +1,24 @@
 import { PersonAddAlt1 as PersonAddIcon } from '@mui/icons-material'
-import {
-  Avatar,
-  Badge,
-  Box,
-  Card,
-  CardActionArea,
-  Typography
-} from '@mui/material'
+import { Avatar, Box, Card, CardActionArea, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 
-import { PrivateChatProps } from '@/@types/common'
 import { UsePrivateChat } from '@/hooks/chat/UsePrivateChat'
 import { useModal } from '@/hooks/utils/useModal'
 import { checkContactAdded } from '@/utils/checkContactAdded'
+
+interface PrivateChatProps {
+  isGroupChat: false
+  avatarUrl: string | undefined
+  name: string
+  messagePreview?: string
+  email?: string
+  id: string
+}
 
 const PrivateChatCard: React.FC<PrivateChatProps> = ({
   avatarUrl,
   name,
   messagePreview,
-  unreadCount,
-  time,
   email,
   id
 }) => {
@@ -28,13 +27,19 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
   const { handleContactChatClick } = UsePrivateChat()
 
   useEffect(() => {
+    let isMounted = true
+
     const checkIfContactIsAdded = async () => {
       const contactAdded = await checkContactAdded(id)
-      setIsContactAdded(contactAdded)
+      if (isMounted) setIsContactAdded(contactAdded)
     }
 
     checkIfContactIsAdded()
-  }, [id, toggleAddPersonModal])
+
+    return () => {
+      isMounted = false
+    }
+  }, [id])
 
   return (
     <Card
@@ -57,17 +62,9 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
           alignItems: 'center'
         }}
       >
-        <Badge
-          badgeContent={unreadCount}
-          color='error'
-          sx={{
-            mr: 2
-          }}
-        >
-          <Avatar src={avatarUrl} alt={name}>
-            {avatarUrl ? '' : name.charAt(0).toUpperCase()}
-          </Avatar>
-        </Badge>
+        <Avatar src={avatarUrl} alt={name} sx={{ mr: 2 }}>
+          {avatarUrl ? '' : name.charAt(0).toUpperCase()}
+        </Avatar>
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Typography variant='body1' fontWeight='bold' color='common.black'>
             {name}
@@ -75,6 +72,7 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
           <Typography variant='body2' fontWeight='bold' color='grey.600'>
             {email}
           </Typography>
+
           <Typography
             variant='body2'
             color='text.secondary'
@@ -87,22 +85,8 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
             {messagePreview}
           </Typography>
         </Box>
-        <Typography
-          variant='body2'
-          color='text.secondary'
-          fontWeight='bold'
-          textAlign='right'
-          sx={{
-            ml: 'auto',
-            whiteSpace: 'nowrap',
-            alignSelf: 'self-start',
-            mt: 0.5
-          }}
-        >
-          {time}
-        </Typography>
       </CardActionArea>
-      {!isContactAdded && (
+      {isContactAdded && (
         <CardActionArea
           onClick={() => toggleAddPersonModal(id)}
           sx={{
