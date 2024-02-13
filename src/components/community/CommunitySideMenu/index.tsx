@@ -15,25 +15,33 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 import ContactList from '../ContactList'
 
 import { ContactProps } from '@/@types/common'
 import { primaryTypographyStyles } from '@/components/shared/Navbar/styles'
 import { auth } from '@/firebase'
-import { useNavigation } from '@/hooks/utils/useNavigation'
-
-const menuItems = [
-  { icon: <HomeIcon />, text: 'home', to: '/home' },
-  { icon: <LanguageIcon />, text: 'discover', to: '/discover' },
-  { icon: <GroupAddIcon />, text: 'create_group', to: 'modal' }
-]
+import { useModal } from '@/hooks/utils/useModal'
 
 const CommunitySideMenu: React.FC = () => {
+  const navigate = useNavigate()
   const { t } = useTranslation()
-  const { handleNavigate } = useNavigation()
-
+  const { toggleCreateGroupModal } = useModal()
   const [contacts, setContacts] = useState<ContactProps[]>([])
+  const menuItems = [
+    { icon: <HomeIcon />, text: 'home', onClick: navigate('/home') },
+    {
+      icon: <LanguageIcon />,
+      text: 'discover',
+      onClick: navigate('/discover')
+    },
+    {
+      icon: <GroupAddIcon />,
+      text: 'create_group',
+      onClick: toggleCreateGroupModal()
+    }
+  ]
 
   useEffect(() => {
     const db = getFirestore()
@@ -76,7 +84,7 @@ const CommunitySideMenu: React.FC = () => {
         {menuItems.map((item, index) => (
           <ListItem
             key={index}
-            onClick={() => handleNavigate(item.to)}
+            onClick={() => item.onClick}
             sx={{ cursor: 'pointer' }}
           >
             <ListItemIcon>{item.icon}</ListItemIcon>

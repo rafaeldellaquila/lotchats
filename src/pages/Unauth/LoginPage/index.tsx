@@ -1,23 +1,23 @@
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import LoginForm from '@/components/user/LoginForm'
 import { auth } from '@/firebase'
-import { useNavigation } from '@/hooks/utils/useNavigation'
 
 const LoginPage: React.FC = () => {
-  const { handleNavigate } = useNavigation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
-        handleNavigate('/home')
+        navigate('/home')
       } else {
         return
       }
     })
 
     return () => unsubscribe()
-  }, [handleNavigate])
+  }, [navigate])
 
   return (
     <>

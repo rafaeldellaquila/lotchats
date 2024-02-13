@@ -12,9 +12,7 @@ import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore'
 import { ref, getStorage, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
-
-import { useNavigation } from '@/hooks/utils/useNavigation'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 interface FormData {
   name: string
@@ -31,7 +29,7 @@ const UserForm: React.FC = () => {
   const { pathname } = useLocation()
   const isRegisterPage = pathname === '/register'
   const isConfigPage = pathname === '/config'
-  const { handleNavigate } = useNavigation()
+  const navigate = useNavigate()
 
   const auth = getAuth()
   const db = getFirestore()
@@ -105,7 +103,7 @@ const UserForm: React.FC = () => {
         )
       await updateUserInfo(userCredential.user.uid)
       console.log('User registered successfully')
-      handleNavigate('/home')
+      navigate('/home')
     } catch (error) {
       console.error(error)
       console.log('Error registering user')
@@ -152,7 +150,7 @@ const UserForm: React.FC = () => {
         console.log('User updated successfully')
       }
 
-      handleNavigate('/home')
+      navigate('/home')
     } catch (error) {
       console.error(error)
       console.log('Error updating user')

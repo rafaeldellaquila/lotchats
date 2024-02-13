@@ -19,10 +19,9 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 import MenuItemComponent from './ChatNavMenu'
-
-import { useNavigation } from '@/hooks/utils/useNavigation'
 
 interface ReceiverProps {
   name: string
@@ -44,10 +43,10 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
   const { t } = useTranslation()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [membersDialogOpen, setMembersDialogOpen] = useState(false)
-  const { handleNavigate } = useNavigation()
+  const navigate = useNavigate()
 
   const menuItems = [
-    { text: 'search', onClick: () => handleNavigate('/') },
+    { text: 'search', onClick: () => navigate('/') },
     {
       text: 'block',
       onClick: () => {}

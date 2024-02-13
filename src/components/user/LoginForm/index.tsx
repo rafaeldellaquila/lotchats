@@ -2,16 +2,15 @@ import { Box, TextField, Button, Link } from '@mui/material'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { useNavigation } from '@/hooks/utils/useNavigation'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm: React.FC = () => {
   const { t } = useTranslation()
-  const { handleNavigate } = useNavigation()
   const auth = getAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
@@ -27,7 +26,7 @@ const LoginForm: React.FC = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password)
-      handleNavigate('/home')
+      navigate('/home')
     } catch (error) {
       // Trata erros de login
       console.error('Login error:', error)

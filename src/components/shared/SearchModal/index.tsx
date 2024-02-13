@@ -18,12 +18,12 @@ import {
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 import { searchModalStyles } from '../Navbar/styles'
 
 import { DrawerProps, UserProps } from '@/@types/common'
 import { auth } from '@/firebase'
-import { useNavigation } from '@/hooks/utils/useNavigation'
 import { setSearchResults } from '@/redux/slices/searchSlice'
 
 const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
@@ -32,7 +32,7 @@ const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
   const [searchTerm, setSearchTerm] = useState<string>('')
   const currentUserEmail = auth.currentUser?.email
   const db = getFirestore()
-  const { handleNavigate } = useNavigation()
+  const navigate = useNavigate()
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchTerm(event.target.value)
@@ -63,7 +63,7 @@ const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
       )
 
     dispatch(setSearchResults(results))
-    handleNavigate('/discover')
+    navigate('/discover')
     onClose?.()
   }
 
