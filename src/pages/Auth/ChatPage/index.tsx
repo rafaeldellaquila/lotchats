@@ -8,7 +8,14 @@ const ChatPage: React.FC = () => {
   const { chatid } = useParams<{ chatid: string }>()
 
   return (
-    <Box sx={{ height: '100%' }}>
+    <Box
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden'
+      }}
+    >
       <PrivateChat chatId={chatid as string} onBack={() => navigate(-1)} />
     </Box>
   )

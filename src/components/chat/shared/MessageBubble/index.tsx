@@ -16,6 +16,14 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
   const isOwner = message.senderId === auth.currentUser?.uid
   const alignToRight = isOwner
 
+  const timestampDate = message.timestamp
+    ? message.timestamp.toDate()
+    : new Date()
+
+  const formattedTime = timestampDate
+    ? `${timestampDate.getHours().toString().padStart(2, '0')}:${timestampDate.getMinutes().toString().padStart(2, '0')}`
+    : 'Horário Indisponível'
+
   const bubbleStyles: SxProps<Theme> = {
     maxWidth: '80%',
     minWidth: '10%',
@@ -41,9 +49,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
         </Typography>
       )}
       <Typography variant='body1'>{message.text}</Typography>
-      <Typography variant='caption'>
-        Implementar {/* {message.timestamp.toDate().toDateString()} */}
-      </Typography>
+      <Typography variant='caption'>{formattedTime}</Typography>
     </Box>
   )
 }

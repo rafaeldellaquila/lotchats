@@ -16,7 +16,7 @@ const AuthLayout: React.FC = () => {
         sx={{
           display: 'flex',
           flexGrow: 1,
-          overflow: 'auto',
+          overflow: 'hidden',
           flexDirection: isLargeScreen ? 'row' : 'column'
         }}
       >
@@ -26,8 +26,8 @@ const AuthLayout: React.FC = () => {
             <CommunitySideMenu />
           </Box>
         )}
-        <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
-          {isLargeScreen && pathname !== '/chat' && <Navbar />}
+        <Box sx={{ flexGrow: 1, overflow: 'hidden' }}>
+          {isLargeScreen && pathname === '/chat' && <Navbar />}
           <Outlet />
         </Box>
         {isLargeScreen && (

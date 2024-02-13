@@ -13,7 +13,9 @@ import {
   DialogContent,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
+  Box,
+  Avatar
 } from '@mui/material'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -22,8 +24,12 @@ import MenuItemComponent from './ChatNavMenu'
 
 import { useNavigation } from '@/hooks/utils/useNavigation'
 
+interface ReceiverProps {
+  name: string
+  avatarUrl: string
+}
 interface ChatNavBarProps {
-  receiver: string | undefined
+  receiver: ReceiverProps
   onBack: () => void
   members?: string[]
   isGroup: boolean
@@ -41,14 +47,14 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
   const { handleNavigate } = useNavigation()
 
   const menuItems = [
-    { text: 'home', onClick: () => handleNavigate('/') },
+    { text: 'search', onClick: () => handleNavigate('/') },
     {
-      text: 'discover',
-      onClick: () => handleNavigate('/discover')
+      text: 'block',
+      onClick: () => {}
     },
     {
-      text: 'create_group',
-      onClick: () => handleNavigate('modal')
+      text: 'invite_group',
+      onClick: () => {}
     }
   ]
 
@@ -73,18 +79,20 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
 
   return (
     <AppBar position='static' elevation={0} color='transparent'>
-      <Toolbar>
-        <IconButton edge='start' color='inherit' onClick={onBack}>
-          <ChevronLeftIcon />
-        </IconButton>
-        <Typography
-          variant='h6'
-          component='div'
-          sx={{ flexGrow: 1 }}
-          fontWeight={600}
-        >
-          {receiver}
-        </Typography>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <IconButton edge='start' color='inherit' onClick={onBack}>
+            <ChevronLeftIcon />
+          </IconButton>
+          <Avatar
+            src={receiver.avatarUrl}
+            sx={{ width: 40, height: 40, marginRight: 2 }}
+            alt='Avatar preview'
+          />
+          <Typography variant='h1' fontWeight={600}>
+            {receiver.name}
+          </Typography>
+        </Box>
         <IconButton color='inherit' onClick={handleClick}>
           <MoreVertIcon />
         </IconButton>

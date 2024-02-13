@@ -13,10 +13,8 @@ import { auth } from '@/firebase'
 const ChatInput: React.FC<{ chatId: string }> = ({ chatId }) => {
   const [message, setMessage] = useState('')
   const db = getFirestore()
-  console.log('input chatId', chatId)
 
   const sendMessage = async () => {
-    console.log('input chatId', chatId)
     if (message.trim() === '') return
     const messagesRef = collection(db, `chats/${chatId}/messages`)
 

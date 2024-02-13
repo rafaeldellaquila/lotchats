@@ -8,7 +8,7 @@ import {
   orderBy,
   query
 } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import ChatInput from '../../shared/ChatInput'
 import ChatNavBar from '../../shared/ChatNavBar'
@@ -26,15 +26,35 @@ const PrivateChat: React.FC<ChatProps> = ({ chatId, onBack }) => {
   const db = getFirestore()
   const theme = useTheme()
   const [messages, setMessages] = useState<MessageProps[]>([])
-  const [receiverName, setReceiverName] = useState<string>('')
+  const [receiverContact, setReceiverContact] = useState<{
+    name: string
+    avatarUrl: string
+  }>({
+    name: '',
+    avatarUrl: ''
+  })
+
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!chatId) {
-      console.error('Invalid chatId:', chatId)
-      return
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
+  useEffect(() => {
+    if (!chatId) return
 
     const chatRef = doc(db, `chats`, chatId)
+    const messagesRef = collection(db, `chats/${chatId}/messages`)
+    const q = query(messagesRef, orderBy('timestamp', 'asc'))
+
+    const unsubscribe = onSnapshot(q, querySnapshot => {
+      const fetchedMessages = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as MessageProps[]
+
+      setMessages(fetchedMessages)
+    })
 
     getDoc(chatRef)
       .then(docSnap => {
@@ -51,7 +71,10 @@ const PrivateChat: React.FC<ChatProps> = ({ chatId, onBack }) => {
             getDoc(receiverRef)
               .then(userSnap => {
                 if (userSnap.exists()) {
-                  setReceiverName(userSnap.data().name)
+                  setReceiverContact({
+                    name: userSnap.data().name,
+                    avatarUrl: userSnap.data().avatarUrl
+                  })
                 } else {
                   console.error('Receiver user not found')
                 }
@@ -68,25 +91,6 @@ const PrivateChat: React.FC<ChatProps> = ({ chatId, onBack }) => {
         console.error('Error fetching chat document:', error)
       })
 
-    const messagesRef = collection(db, `chats/${chatId}/messages`)
-
-    console.log('messagesRef', messagesRef)
-
-    const q = query(messagesRef, orderBy('timestamp', 'asc'))
-
-    console.log('q', q)
-
-    const unsubscribe = onSnapshot(q, querySnapshot => {
-      const fetchedMessages = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as MessageProps[]
-
-      console.log('fetchedMessages', fetchedMessages)
-
-      setMessages(fetchedMessages)
-    })
-
     return () => unsubscribe()
   }, [db, chatId])
 
@@ -95,17 +99,17 @@ const PrivateChat: React.FC<ChatProps> = ({ chatId, onBack }) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '100%'
+        height: '100%'
       }}
     >
-      <ChatNavBar receiver={receiverName} onBack={onBack} isGroup={false} />
+      <ChatNavBar receiver={receiverContact} onBack={onBack} isGroup={false} />
       <Box
         sx={{
           flexGrow: 1,
           overflowY: 'auto',
-          padding: theme.spacing(2),
           display: 'flex',
           flexDirection: 'column',
+          padding: theme.spacing(2),
           '& > *:not(:first-of-type)': {
             marginTop: theme.spacing(1)
           }
@@ -114,13 +118,14 @@ const PrivateChat: React.FC<ChatProps> = ({ chatId, onBack }) => {
         {messages.map(message => (
           <MessageBubble key={message.id} message={message} />
         ))}
+        <div ref={messagesEndRef} />
       </Box>
       <Box
         sx={{
           backgroundColor: theme.palette.background.paper,
           borderRadius: '4px',
           border: `2px solid ${theme.palette.primary.main}`,
-          m: 2
+          margin: 2
         }}
       >
         <ChatInput chatId={chatId} />
