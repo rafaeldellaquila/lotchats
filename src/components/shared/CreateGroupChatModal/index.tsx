@@ -167,6 +167,7 @@ const CreateGroupChatModal: React.FC<{
             label={t('group_description')}
             type='text'
             fullWidth
+            required
             variant='outlined'
             value={groupDescription}
             onChange={handleGroupDescriptionChange}

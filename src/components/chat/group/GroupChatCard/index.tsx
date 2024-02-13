@@ -1,4 +1,11 @@
-import { Avatar, Badge, Box, Card, Chip, Typography } from '@mui/material'
+import {
+  Avatar,
+  Box,
+  Card,
+  CardActionArea,
+  Chip,
+  Typography
+} from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
 import { GroupMemberProps } from '@/@types/common'
@@ -7,7 +14,7 @@ interface GroupChatCardProps {
   id: string
   avatarUrl: string
   name: string
-  messagePreview: string
+  description: string
   members: GroupMemberProps[]
 }
 
@@ -15,12 +22,13 @@ const GroupChatCard: React.FC<GroupChatCardProps> = ({
   id,
   avatarUrl,
   name,
+  description,
   members
 }) => {
   const navigate = useNavigate()
 
   const handleNavigate = () => {
-    navigate(`/groupchat/${id}`) // Navega para o chat do grupo com o id específico
+    navigate(`/groupchat/${id}`)
   }
 
   return (
@@ -30,30 +38,46 @@ const GroupChatCard: React.FC<GroupChatCardProps> = ({
         display: 'flex',
         alignItems: 'center',
         mb: 2,
-        p: '1rem',
         width: '100%',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        cursor: 'pointer'
       }}
       elevation={0}
     >
-      <Badge badgeContent={undefined} color='error' sx={{ mr: 2 }}>
-        <Avatar src={avatarUrl} alt={name} sx={{ width: 56, height: 56 }}>
-          {!avatarUrl && name.charAt(0).toUpperCase()}
-        </Avatar>
-      </Badge>
-      <Box
+      <CardActionArea
         sx={{
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          mr: 2
+          flex: 1,
+          p: '1rem',
+          alignItems: 'center'
         }}
       >
-        <Typography variant='body1' fontWeight='bold' color='common.black'>
-          {name}
-        </Typography>
-        <Chip label={`${members.length} members`} size='small' />
-      </Box>
+        <Avatar src={avatarUrl} alt={name} sx={{ mr: 2 }}>
+          {avatarUrl ? '' : name.charAt(0).toUpperCase()}
+        </Avatar>
+
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Box sx={{ display: 'flex', flexDirection: `row` }}>
+            <Typography
+              variant='body1'
+              fontWeight='bold'
+              color='common.black'
+              sx={{ mr: 1 }}
+            >
+              {name}
+            </Typography>
+            <Chip
+              label={`${members.length} members`}
+              size='small'
+              color='info'
+              sx={{ fontSize: '0.7rem' }}
+            />
+          </Box>
+          <Typography variant='body2' color='text.secondary' sx={{ my: 0.5 }}>
+            {description}
+          </Typography>
+        </Box>
+      </CardActionArea>
     </Card>
   )
 }

@@ -62,7 +62,7 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
         display: 'flex',
         alignItems: 'center',
         mb: 2,
-        p: '1rem',
+
         width: '100%',
         boxSizing: 'border-box',
         cursor: 'pointer'
@@ -74,6 +74,7 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
         sx={{
           display: 'flex',
           flex: 10,
+          p: '1rem',
           alignItems: 'center'
         }}
       >
@@ -106,8 +107,8 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
           sx={{
             display: 'flex',
             flex: 1,
-            alignItems: 'center',
-            p: 2
+            p: '1rem',
+            alignItems: 'center'
           }}
         >
           <PersonAddIcon color='success' />
@@ -119,8 +120,8 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
         sx={{
           display: 'flex',
           flex: 1,
-          alignItems: 'center',
-          p: 2
+          p: '1rem',
+          alignItems: 'center'
         }}
       >
         {isFavorite ? (

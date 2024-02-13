@@ -1,20 +1,20 @@
 import { Box, useTheme } from '@mui/material'
 import {
-  getFirestore,
   collection,
-  query,
-  orderBy,
-  onSnapshot,
   doc,
-  getDoc
+  getDoc,
+  getFirestore,
+  onSnapshot,
+  orderBy,
+  query
 } from 'firebase/firestore'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import ChatInput from '../../shared/ChatInput'
 import ChatNavBar from '../../shared/ChatNavBar'
 import MessageBubble from '../../shared/MessageBubble'
 
-import { MessageProps, GroupMemberProps } from '@/@types/common'
+import { MessageProps } from '@/@types/common'
 
 interface GroupChatProps {
   groupId: string
@@ -25,12 +25,12 @@ const GroupChat: React.FC<GroupChatProps> = ({ groupId, onBack }) => {
   const db = getFirestore()
   const theme = useTheme()
   const [messages, setMessages] = useState<MessageProps[]>([])
-  const [members, setMembers] = useState<GroupMemberProps[]>([])
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const [groupInfos, setGroupInfos] = useState({
+  const [groupInfo, setGroupInfo] = useState({
     name: '',
-    avatarUrl: ''
+    avatarUrl: '',
+    members: []
   })
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -39,10 +39,26 @@ const GroupChat: React.FC<GroupChatProps> = ({ groupId, onBack }) => {
   useEffect(() => {
     if (!groupId) return
 
+    const groupRef = doc(db, 'groups', groupId)
+
+    // Fetch group info and members
+    getDoc(groupRef).then(docSnap => {
+      if (docSnap.exists()) {
+        const data = docSnap.data()
+        setGroupInfo({
+          name: data.name,
+          avatarUrl: data.avatarUrl,
+          members: data.members || []
+        })
+      } else {
+        console.error('Group document not found')
+      }
+    })
+
     const messagesRef = collection(db, `groups/${groupId}/messages`)
     const q = query(messagesRef, orderBy('timestamp', 'asc'))
 
-    const unsubscribeMessages = onSnapshot(q, querySnapshot => {
+    const unsubscribe: () => void = onSnapshot(q, querySnapshot => {
       const fetchedMessages = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -51,23 +67,7 @@ const GroupChat: React.FC<GroupChatProps> = ({ groupId, onBack }) => {
       setMessages(fetchedMessages)
     })
 
-    const groupRef = doc(db, 'groups', groupId)
-    getDoc(groupRef).then(docSnap => {
-      if (docSnap.exists()) {
-        const groupData = docSnap.data()
-        setMembers(groupData.members || [])
-        setGroupInfos({
-          name: groupData.name || '',
-          avatarUrl: groupData.avatarUrl || ''
-        })
-      } else {
-        console.error('Group document not found')
-      }
-    })
-
-    return () => {
-      unsubscribeMessages()
-    }
+    return () => unsubscribe()
   }, [db, groupId])
 
   return (
@@ -78,12 +78,7 @@ const GroupChat: React.FC<GroupChatProps> = ({ groupId, onBack }) => {
         height: '100%'
       }}
     >
-      <ChatNavBar
-        receiver={groupInfos}
-        onBack={onBack}
-        members={members}
-        isGroup={true}
-      />
+      <ChatNavBar receiver={groupInfo} onBack={onBack} isGroup={true} />
       <Box
         sx={{
           flexGrow: 1,
@@ -97,11 +92,11 @@ const GroupChat: React.FC<GroupChatProps> = ({ groupId, onBack }) => {
         }}
       >
         {messages.map(message => (
-          <MessageBubble key={message.id} message={message} isGroup={true} />
+          <MessageBubble key={message.id} message={message} isGroup />
         ))}
         <div ref={messagesEndRef} />
       </Box>
-      <ChatInput chatId={groupId} />
+      <ChatInput chatId={groupId} isGroup />
     </Box>
   )
 }

@@ -21,6 +21,7 @@ export interface PreviewChatProps {
   messagePreview: string
   isGroup?: boolean
   members?: GroupMemberProps[]
+  description: string
 }
 
 export interface GroupMemberProps {
@@ -42,10 +43,9 @@ export interface ChatProps extends UserProps {
 }
 
 export interface MessageProps {
-  // Chat page
   id: string
   senderId: string
   text: string
   timestamp: Timestamp
-  //  isOwner: boolean
+  senderName?: string
 }

@@ -123,6 +123,7 @@ const HomePage: React.FC = () => {
           groupsData.push({
             id: groupId,
             avatarUrl: groupData.groupAvatarUrl,
+            description: groupData.description,
             name: groupData.name,
             messagePreview,
             members: groupData.members,

@@ -1,5 +1,4 @@
 import { Box, Typography, useTheme, SxProps, Theme } from '@mui/material'
-import { useTranslation } from 'react-i18next'
 
 import { MessageProps } from '@/@types/common'
 import { auth } from '@/firebase'
@@ -13,7 +12,6 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
   message,
   isGroup = false
 }) => {
-  const { t } = useTranslation()
   const theme = useTheme()
   const isOwner = message.senderId === auth.currentUser?.uid
   const alignToRight = isOwner
@@ -22,9 +20,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
     ? message.timestamp.toDate()
     : new Date()
 
-  const formattedTime = timestampDate
-    ? `${timestampDate.getHours().toString().padStart(2, '0')}:${timestampDate.getMinutes().toString().padStart(2, '0')}`
-    : t('undefined_time')
+  const formattedTime = `${timestampDate.getHours().toString().padStart(2, '0')}:${timestampDate.getMinutes().toString().padStart(2, '0')}`
 
   const bubbleStyles: SxProps<Theme> = {
     maxWidth: '80%',
@@ -45,9 +41,13 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 
   return (
     <Box sx={bubbleStyles}>
-      {isGroup && (
-        <Typography variant='body2' fontWeight={'bold'}>
-          {message.senderId}
+      {isGroup && !isOwner && (
+        <Typography
+          variant='body2'
+          fontWeight={'bold'}
+          sx={{ color: theme.palette.text.secondary }}
+        >
+          {message.senderName || message.senderId}
         </Typography>
       )}
       <Typography variant='body1'>{message.text}</Typography>

@@ -3,25 +3,36 @@ import { Box, IconButton, InputBase } from '@mui/material'
 import {
   addDoc,
   collection,
+  doc,
+  getDoc,
   getFirestore,
   serverTimestamp
 } from 'firebase/firestore'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { auth } from '@/firebase'
 
-const ChatInput: React.FC<{ chatId: string }> = ({ chatId }) => {
+const ChatInput: React.FC<{ chatId: string; isGroup?: boolean }> = ({
+  chatId,
+  isGroup = false
+}) => {
   const [message, setMessage] = useState('')
   const db = getFirestore()
+  const [senderName, setSenderName] = useState('')
 
   const sendMessage = async () => {
     if (message.trim() === '') return
-    const messagesRef = collection(db, `chats/${chatId}/messages`)
 
+    const messagesRef = collection(
+      db,
+      `${isGroup ? 'groups' : 'chats'}/${chatId}/messages`
+    )
     await addDoc(messagesRef, {
       text: message,
       senderId: auth.currentUser?.uid,
-      timestamp: serverTimestamp()
+      senderName,
+      timestamp: serverTimestamp(),
+      ...(isGroup && { isGroupMessage: true })
     })
 
     setMessage('')
@@ -33,6 +44,23 @@ const ChatInput: React.FC<{ chatId: string }> = ({ chatId }) => {
       sendMessage()
     }
   }
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      const userAuth = auth.currentUser
+      if (userAuth) {
+        const userRef = doc(db, 'users', userAuth.uid)
+        const docSnap = await getDoc(userRef)
+        if (docSnap.exists()) {
+          setSenderName(docSnap.data().name)
+        } else {
+          console.log('No such document!')
+        }
+      }
+    }
+
+    fetchUserName()
+  }, [db])
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px' }}>

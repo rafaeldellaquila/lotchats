@@ -38,7 +38,7 @@ const ChatCardList: React.FC<ChatCardListProps> = ({ chats, title }) => {
               id={chat.id}
               avatarUrl={chat.avatarUrl}
               name={chat.name}
-              messagePreview={chat.messagePreview}
+              description={chat.description}
               members={chat.members!}
             />
           )
