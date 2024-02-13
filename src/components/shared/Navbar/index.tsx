@@ -40,7 +40,7 @@ const NavBar: React.FC = () => {
   const handleTitles = () => {
     if (pathname === '/') return t('home')
     if (pathname === '/discover') return t('discover')
-    if (pathname === '/chat') return ' '
+    if (pathname.toString().includes('chat')) return ' '
     return
   }
 

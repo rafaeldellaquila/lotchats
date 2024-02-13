@@ -8,7 +8,7 @@ import { auth } from '@/firebase'
  * @returns {Promise<boolean>} Promessa que resolve com `true` se o contato foi adicionado, caso contrário `false`.
  */
 
-export const checkContactAdded = async (id: string): Promise<boolean> => {
+export const isContactAdded = async (id: string): Promise<boolean> => {
   const user = auth.currentUser
   const db = getFirestore()
 

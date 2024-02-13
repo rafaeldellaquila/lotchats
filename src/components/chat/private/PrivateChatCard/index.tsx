@@ -1,10 +1,15 @@
-import { PersonAddAlt1 as PersonAddIcon } from '@mui/icons-material'
+import {
+  PersonAddAlt1 as PersonAddIcon,
+  FavoriteBorder as FavoriteBorderIcon,
+  Favorite as FavoriteIcon
+} from '@mui/icons-material'
 import { Avatar, Box, Card, CardActionArea, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 
 import { usePrivateChat } from '@/hooks/chat/usePrivateChat'
 import { useModal } from '@/hooks/utils/useModal'
-import { checkContactAdded } from '@/utils/checkContactAdded'
+import { isContactAdded } from '@/utils/isContactAdded'
+import { toggleFavoriteContact } from '@/utils/toggleFavoriteContact'
 
 interface PrivateChatProps {
   isGroupChat: false
@@ -23,18 +28,29 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
   id
 }) => {
   const { toggleAddPersonModal } = useModal()
-  const [isContactAdded, setIsContactAdded] = useState<boolean>(false)
+  const [contactAdded, setContactAdded] = useState<boolean>(false)
   const { handleContactChatClick } = usePrivateChat()
+  const [isFavorite, setIsFavorite] = useState<boolean>(false)
+
+  const handleToggleFavorite = async () => {
+    await toggleFavoriteContact(id)
+    setIsFavorite(!isFavorite)
+  }
 
   useEffect(() => {
     let isMounted = true
 
-    const checkIfContactIsAdded = async () => {
-      const contactAdded = await checkContactAdded(id)
-      if (isMounted) setIsContactAdded(contactAdded)
+    const ContactsCheck = async () => {
+      const contactAdded = await isContactAdded(id)
+      const favoriteStatus = await isContactAdded(id)
+
+      if (isMounted) {
+        setContactAdded(contactAdded)
+        setIsFavorite(favoriteStatus)
+      }
     }
 
-    checkIfContactIsAdded()
+    ContactsCheck()
 
     return () => {
       isMounted = false
@@ -72,7 +88,6 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
           <Typography variant='body2' fontWeight='bold' color='grey.600'>
             {email}
           </Typography>
-
           <Typography
             variant='body2'
             color='text.secondary'
@@ -86,7 +101,7 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
           </Typography>
         </Box>
       </CardActionArea>
-      {isContactAdded && (
+      {contactAdded && (
         <CardActionArea
           onClick={() => toggleAddPersonModal(id)}
           sx={{
@@ -99,6 +114,22 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
           <PersonAddIcon color='success' />
         </CardActionArea>
       )}
+
+      <CardActionArea
+        onClick={handleToggleFavorite}
+        sx={{
+          display: 'flex',
+          flex: 1,
+          alignItems: 'center',
+          p: 2
+        }}
+      >
+        {isFavorite ? (
+          <FavoriteIcon color='error' />
+        ) : (
+          <FavoriteBorderIcon color='error' />
+        )}
+      </CardActionArea>
     </Card>
   )
 }
