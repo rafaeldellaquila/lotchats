@@ -1,4 +1,5 @@
 import { Box, Typography, useTheme, SxProps, Theme } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 import { MessageProps } from '@/@types/common'
 import { auth } from '@/firebase'
@@ -12,6 +13,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
   message,
   isGroup = false
 }) => {
+  const { t } = useTranslation()
   const theme = useTheme()
   const isOwner = message.senderId === auth.currentUser?.uid
   const alignToRight = isOwner
@@ -22,7 +24,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 
   const formattedTime = timestampDate
     ? `${timestampDate.getHours().toString().padStart(2, '0')}:${timestampDate.getMinutes().toString().padStart(2, '0')}`
-    : 'Horário Indisponível'
+    : t('undefined_time')
 
   const bubbleStyles: SxProps<Theme> = {
     maxWidth: '80%',
