@@ -80,12 +80,12 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
   const handleMembersDialogToggle = async () => {
     if (!membersDialogOpen && members) {
       const memberDetailsPromise = members.map(async member => {
-        const userDocRef = doc(db, 'users', member.uid)
+        const userDocRef = doc(db, 'users', member.id)
         const userDocSnap = await getDoc(userDocRef)
         if (userDocSnap.exists()) {
           const userData = userDocSnap.data()
           return {
-            uid: member.uid,
+            id: member.id,
             name: userData.name,
             avatarUrl: userData.avatarUrl
           }

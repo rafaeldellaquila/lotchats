@@ -22,7 +22,7 @@ export interface PreviewChatProps {
 }
 
 export interface GroupMemberProps {
-  uid: string
+  id: string
   isAdmin: boolean
   name: string
   avatarUrl: string

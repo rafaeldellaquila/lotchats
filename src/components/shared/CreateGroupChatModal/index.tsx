@@ -110,7 +110,7 @@ const CreateGroupChatModal: React.FC<{
         createdAt: serverTimestamp(),
         members: [
           {
-            uid: currentUserUid,
+            id: currentUserUid,
             isAdmin: true,
             avatarUrl: creatorAvatarUrl
           }
