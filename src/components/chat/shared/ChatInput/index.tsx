@@ -28,10 +28,9 @@ const ChatInput: React.FC<{ chatId: string }> = ({ chatId }) => {
   }
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    // Verifica se Enter foi pressionado sem a tecla Shift
     if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault() // Impede a quebra de linha
-      sendMessage() // Envia a mensagem
+      event.preventDefault()
+      sendMessage()
     }
   }
 
