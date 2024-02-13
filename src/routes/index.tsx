@@ -50,7 +50,7 @@ const RouterComponent = () => {
       <Route element={<ProtectedRoute />}>
         <Route element={<AuthLayout />}>
           <Route path='/home' element={<HomePage />} />
-          <Route path='/chat/:chatid' element={<ChatPage />} />
+          <Route path='/privatechat/:chatid' element={<ChatPage />} />
           <Route path='/groupchat' element={<GroupChatPage />} />
           <Route path='/discover' element={<DiscoverPage />} />
           <Route path='/config' element={<ConfigPage />} />

@@ -12,10 +12,7 @@ export const checkContactAdded = async (id: string): Promise<boolean> => {
   const user = auth.currentUser
   const db = getFirestore()
 
-  if (!user) {
-    console.log('Usuário não está autenticado.')
-    return false
-  }
+  if (!user) return false
 
   try {
     const userDocRef = doc(db, 'users', user.uid)

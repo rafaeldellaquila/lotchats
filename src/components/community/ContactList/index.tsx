@@ -7,43 +7,14 @@ import {
   ListItemText,
   Badge
 } from '@mui/material'
-import {
-  doc,
-  getDoc,
-  getFirestore,
-  serverTimestamp,
-  setDoc
-} from 'firebase/firestore'
 import { useTranslation } from 'react-i18next'
 
 import { ContactProps } from '@/@types/common'
-import { auth } from '@/firebase'
-import { useNavigation } from '@/hooks/utils/useNavigation'
+import { UsePrivateChat } from '@/hooks/chat/UsePrivateChat'
 
 const ContactList: React.FC<{ contacts: ContactProps[] }> = ({ contacts }) => {
   const { t } = useTranslation()
-  const { handleNavigate } = useNavigation()
-
-  const handleChatClick = async (contactId: string) => {
-    const db = getFirestore()
-    const currentUser = auth.currentUser
-
-    if (currentUser) {
-      const userIds = [currentUser.uid, contactId].sort()
-      const chatId = userIds.join('_')
-      const chatDocRef = doc(db, 'chats', chatId)
-      const chatDocSnap = await getDoc(chatDocRef)
-
-      if (!chatDocSnap.exists()) {
-        await setDoc(chatDocRef, {
-          members: userIds,
-          createdAt: serverTimestamp()
-        })
-      }
-
-      handleNavigate(`/chat/${chatId}`)
-    }
-  }
+  const { handleContactChatClick } = UsePrivateChat()
 
   return (
     <List>
@@ -54,7 +25,7 @@ const ContactList: React.FC<{ contacts: ContactProps[] }> = ({ contacts }) => {
         contacts.map((contact, index) => (
           <ListItem
             key={index}
-            onClick={() => handleChatClick(contact.id)}
+            onClick={() => handleContactChatClick(contact.id)}
             sx={{ cursor: 'pointer' }}
           >
             <ListItemIcon>

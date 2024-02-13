@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from 'react'
 
 import { PrivateChatProps } from '@/@types/common'
+import { UsePrivateChat } from '@/hooks/chat/UsePrivateChat'
 import { useModal } from '@/hooks/utils/useModal'
 import { checkContactAdded } from '@/utils/checkContactAdded'
 
@@ -24,10 +25,7 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
 }) => {
   const { toggleAddPersonModal } = useModal()
   const [isContactAdded, setIsContactAdded] = useState<boolean>(false)
-
-  const handleCardClick = () => {
-    console.log('clique')
-  }
+  const { handleContactChatClick } = UsePrivateChat()
 
   useEffect(() => {
     const checkIfContactIsAdded = async () => {
@@ -52,7 +50,7 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
       elevation={0}
     >
       <CardActionArea
-        onClick={handleCardClick}
+        onClick={() => handleContactChatClick(id)}
         sx={{
           display: 'flex',
           flex: 10,

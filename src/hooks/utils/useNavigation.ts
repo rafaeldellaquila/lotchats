@@ -13,9 +13,8 @@ export const useNavigation = () => {
   const auth = getAuth()
 
   const handleNavigate = async (to: string | number) => {
-    if (to === 'modal') {
-      toggleCreateGroupModal()
-    } else if (to === 'logout') {
+    if (to === 'modal') toggleCreateGroupModal()
+    if (to === 'logout') {
       try {
         await signOut(auth)
         dispatch(setUser(null))
@@ -25,11 +24,10 @@ export const useNavigation = () => {
         console.error('Falha ao realizar logout', error)
         // Tratar o erro
       }
-    } else if (to === 0) {
-      return navigate(0)
-    } else {
-      navigate(to as string)
     }
+
+    if (to === 0) return navigate(0)
+    else navigate(to as string)
   }
 
   return { handleNavigate }

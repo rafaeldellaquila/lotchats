@@ -27,39 +27,63 @@ const PrivateChat: React.FC<ChatProps> = ({ chatId, onBack }) => {
   const theme = useTheme()
   const [messages, setMessages] = useState<MessageProps[]>([])
   const [receiverName, setReceiverName] = useState<string>('')
-  const [receiverId, setReceiverId] = useState<string>('')
 
   useEffect(() => {
-    const chatRef = doc(db, `chats`, chatId)
-    getDoc(chatRef).then(docSnap => {
-      if (docSnap.exists()) {
-        const chatData = docSnap.data()
-        const members = chatData.members || []
-        const receiverId = members.find(
-          (p: string) => p !== auth.currentUser?.uid
-        )
+    if (!chatId) {
+      console.error('Invalid chatId:', chatId)
+      return
+    }
 
-        if (receiverId) {
-          const receiverRef = doc(db, 'users', receiverId)
-          getDoc(receiverRef).then(userSnap => {
-            if (userSnap.exists()) {
-              console.log('userSnap.data()', userSnap.data())
-              setReceiverName(userSnap.data().name)
-              setReceiverId(receiverId)
-            }
-          })
+    const chatRef = doc(db, `chats`, chatId)
+
+    getDoc(chatRef)
+      .then(docSnap => {
+        if (docSnap.exists()) {
+          const chatData = docSnap.data()
+          const members = chatData.members || []
+
+          const localReceiverId = members.find(
+            (id: string) => id !== auth.currentUser?.uid
+          )
+
+          if (localReceiverId) {
+            const receiverRef = doc(db, 'users', localReceiverId)
+            getDoc(receiverRef)
+              .then(userSnap => {
+                if (userSnap.exists()) {
+                  setReceiverName(userSnap.data().name)
+                } else {
+                  console.error('Receiver user not found')
+                }
+              })
+              .catch(error => {
+                console.error('Error fetching receiver user:', error)
+              })
+          }
+        } else {
+          console.error('Chat document not found')
         }
-      }
-    })
+      })
+      .catch(error => {
+        console.error('Error fetching chat document:', error)
+      })
 
     const messagesRef = collection(db, `chats/${chatId}/messages`)
+
+    console.log('messagesRef', messagesRef)
+
     const q = query(messagesRef, orderBy('timestamp', 'asc'))
+
+    console.log('q', q)
 
     const unsubscribe = onSnapshot(q, querySnapshot => {
       const fetchedMessages = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       })) as MessageProps[]
+
+      console.log('fetchedMessages', fetchedMessages)
+
       setMessages(fetchedMessages)
     })
 
@@ -99,7 +123,7 @@ const PrivateChat: React.FC<ChatProps> = ({ chatId, onBack }) => {
           m: 2
         }}
       >
-        <ChatInput chatId={receiverId} />
+        <ChatInput chatId={chatId} />
       </Box>
     </Box>
   )

@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore'
+
 export interface DrawerProps {
   // Drawer - SearchModal
   open: boolean
@@ -26,10 +28,10 @@ export interface ChatProps extends UserProps {
 export interface MessageProps {
   // Chat page
   id: string
-  sender: string
-  message: string
-  time: string
-  isOwner: boolean
+  senderId: string
+  text: string
+  timestamp: Timestamp
+  //  isOwner: boolean
 }
 
 interface BaseChatProps {
