@@ -19,6 +19,8 @@ export interface PreviewChatProps {
   avatarUrl: string
   name: string
   messagePreview: string
+  isGroup?: boolean
+  members?: GroupMemberProps[]
 }
 
 export interface GroupMemberProps {

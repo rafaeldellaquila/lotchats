@@ -12,7 +12,6 @@ import { isContactAdded } from '@/utils/isContactAdded'
 import { toggleFavoriteContact } from '@/utils/toggleFavoriteContact'
 
 interface PrivateChatProps {
-  isGroupChat: false
   avatarUrl: string | undefined
   name: string
   messagePreview?: string

@@ -1,19 +1,31 @@
 import { Avatar, Badge, Box, Card, Chip, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
-import { GroupChatProps } from '@/@types/common'
+import { GroupMemberProps } from '@/@types/common'
 
-const GroupChatCard: React.FC<GroupChatProps> = ({
+interface GroupChatCardProps {
+  id: string
+  avatarUrl: string
+  name: string
+  messagePreview: string
+  members: GroupMemberProps[]
+}
+
+const GroupChatCard: React.FC<GroupChatCardProps> = ({
+  id,
   avatarUrl,
-  groupName,
-  time,
-  qtyMember
+  name,
+  members
 }) => {
   const navigate = useNavigate()
 
+  const handleNavigate = () => {
+    navigate(`/groupchat/${id}`) // Navega para o chat do grupo com o id específico
+  }
+
   return (
     <Card
-      onClick={() => navigate('/groupchat')}
+      onClick={handleNavigate}
       sx={{
         display: 'flex',
         alignItems: 'center',
@@ -25,8 +37,8 @@ const GroupChatCard: React.FC<GroupChatProps> = ({
       elevation={0}
     >
       <Badge badgeContent={undefined} color='error' sx={{ mr: 2 }}>
-        <Avatar src={avatarUrl} alt={groupName} sx={{ mb: 1 }}>
-          {avatarUrl ? '' : groupName.charAt(0).toUpperCase()}
+        <Avatar src={avatarUrl} alt={name} sx={{ width: 56, height: 56 }}>
+          {!avatarUrl && name.charAt(0).toUpperCase()}
         </Avatar>
       </Badge>
       <Box
@@ -38,22 +50,10 @@ const GroupChatCard: React.FC<GroupChatProps> = ({
         }}
       >
         <Typography variant='body1' fontWeight='bold' color='common.black'>
-          {groupName}
+          {name}
         </Typography>
-        <Chip label={`${qtyMember} members`} size='small' />
+        <Chip label={`${members.length} members`} size='small' />
       </Box>
-
-      <Typography
-        variant='body2'
-        color='text.secondary'
-        fontWeight='bold'
-        sx={{
-          ml: 'auto',
-          whiteSpace: 'nowrap'
-        }}
-      >
-        {time}
-      </Typography>
     </Card>
   )
 }

@@ -25,38 +25,38 @@ const ChatCardList: React.FC<ChatCardListProps> = ({ chats, title }) => {
 
   return (
     <Box sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-      <Typography variant='h1' fontWeight='600' sx={{ mb: 2 }}>
-        {title}
-      </Typography>
-      {chats
-        .slice(0, visibleCount)
-        .map(chat =>
-          chat.isGroupChat ? (
+      {chats.length > 0 && (
+        <Typography variant='h1' fontWeight='600' sx={{ mb: 2 }}>
+          {title}
+        </Typography>
+      )}
+      {chats.slice(0, visibleCount).map(chat => {
+        if (chat.isGroup) {
+          return (
             <GroupChatCard
-              isGroupChat
               key={chat.id}
+              id={chat.id}
               avatarUrl={chat.avatarUrl}
-              groupName={chat.groupName}
-              tags={chat.tags}
-              qtyMember={chat.qtyMember}
-              time={chat.time}
-              id={chat.id}
-              members={chat.members}
+              name={chat.name}
+              messagePreview={chat.messagePreview}
+              members={chat.members!}
             />
-          ) : (
+          )
+        } else {
+          return (
             <PrivateChatCard
-              isGroupChat={false}
-              id={chat.id}
               key={chat.id}
+              id={chat.id}
               avatarUrl={chat.avatarUrl}
               name={chat.name}
               messagePreview={chat.messagePreview}
             />
           )
-        )}
-      {chats.length >= 3 && (
+        }
+      })}
+      {chats.length > 3 && (
         <Button onClick={handleLoadChats} variant='outlined'>
-          {visibleCount >= chats.length ? t('see_less') : t('see_all')}
+          {visibleCount >= chats.length ? t('see_less') : t('see_more')}
         </Button>
       )}
     </Box>
