@@ -21,6 +21,13 @@ export interface PreviewChatProps {
   messagePreview: string
 }
 
+export interface GroupMemberProps {
+  uid: string
+  isAdmin: boolean
+  name: string
+  avatarUrl: string
+}
+
 export interface ContactProps {
   id: string
   name: string

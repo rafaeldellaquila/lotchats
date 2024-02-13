@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -9,30 +8,33 @@ import {
   TextField,
   Avatar
 } from '@mui/material'
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getFirestore,
+  serverTimestamp
+} from 'firebase/firestore'
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+
+import { auth } from '@/firebase'
 
 const CreateGroupChatModal: React.FC<{
   open: boolean
   onClose: () => void
 }> = ({ open, onClose }) => {
+  const navigate = useNavigate()
+  const { t } = useTranslation()
   const [groupName, setGroupName] = useState('')
-  const [tags, setTags] = useState<string[]>([])
-  const [tagInput, setTagInput] = useState('')
+  const [groupDescription, setGroupDescription] = useState('')
   const [avatar, setAvatar] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | undefined>(
     undefined
   )
-
-  const handleAddTag = () => {
-    if (tagInput && !tags.includes(tagInput)) {
-      setTags([...tags, tagInput])
-      setTagInput('')
-    }
-  }
-
-  const handleDeleteTag = (tagToDelete: string) => {
-    setTags(tags.filter(tag => tag !== tagToDelete))
-  }
 
   const handleGroupNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -40,32 +42,92 @@ const CreateGroupChatModal: React.FC<{
     setGroupName(event.target.value)
   }
 
-  const handleTagInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTagInput(event.target.value)
+  const handleGroupDescriptionChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setGroupDescription(event.target.value)
   }
 
   const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0]
-      setAvatar(file)
+    const file = event.target.files ? event.target.files[0] : null
+    setAvatar(file)
+    if (file) {
       const reader = new FileReader()
-      reader.onload = () => {
+      reader.onloadend = () => {
         setAvatarPreview(reader.result as string)
       }
       reader.readAsDataURL(file)
+    } else {
+      setAvatarPreview(undefined)
     }
   }
 
-  const handleSubmit = () => {
-    console.log('Group Name:', groupName)
-    console.log('Tags:', tags)
-    // implementar formulario
-    onClose()
+  const handleCreateGroup = async () => {
+    if (!groupName.trim()) {
+      alert(t('provide_group_name'))
+      return
+    }
+
+    let avatarUrl = ''
+    if (avatar) {
+      try {
+        const storage = getStorage()
+        const storageRef = ref(
+          storage,
+          `group_avatars/${avatar.name}_${Date.now()}`
+        )
+        await uploadBytes(storageRef, avatar)
+        avatarUrl = await getDownloadURL(storageRef)
+      } catch (error) {
+        console.error('Error uploading avatar:', error)
+        alert(t('upload_error'))
+        return
+      }
+    }
+
+    const currentUserUid = auth.currentUser?.uid
+    if (!currentUserUid) {
+      console.error('No current user UID found')
+      alert(t('user_error'))
+      return
+    }
+
+    const userDocRef = doc(getFirestore(), 'users', currentUserUid)
+    const userDocSnap = await getDoc(userDocRef)
+    let creatorAvatarUrl = ''
+    if (userDocSnap.exists()) {
+      creatorAvatarUrl = userDocSnap.data().avatarUrl || ''
+    } else {
+      console.error('Creator user document not found')
+    }
+
+    try {
+      const db = getFirestore()
+      const groupDocRef = await addDoc(collection(db, 'groups'), {
+        name: groupName,
+        description: groupDescription,
+        groupAvatarUrl: avatarUrl,
+        createdAt: serverTimestamp(),
+        members: [
+          {
+            uid: currentUserUid,
+            isAdmin: true,
+            avatarUrl: creatorAvatarUrl
+          }
+        ]
+      })
+
+      onClose()
+      navigate(`/groupchat/${groupDocRef.id}`)
+    } catch (error) {
+      console.error('Error creating group:', error)
+      alert(t('creation_error'))
+    }
   }
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Create Group</DialogTitle>
+      <DialogTitle>{t('create_group')}</DialogTitle>
       <DialogContent>
         <Box
           component='form'
@@ -81,7 +143,7 @@ const CreateGroupChatModal: React.FC<{
             <Avatar src={avatarPreview} sx={{ width: 56, height: 56 }} />
           </Box>
           <Button variant='contained' component='label' sx={{ mb: 2 }}>
-            Upload Avatar
+            {t('upload_avatar')}
             <input
               type='file'
               hidden
@@ -92,7 +154,7 @@ const CreateGroupChatModal: React.FC<{
           <TextField
             margin='dense'
             id='groupName'
-            label='Group Name'
+            label={t('group_name')}
             type='text'
             fullWidth
             variant='outlined'
@@ -101,30 +163,19 @@ const CreateGroupChatModal: React.FC<{
           />
           <TextField
             margin='dense'
-            id='tagInput'
-            label='Tags'
+            id='groupDescription'
+            label={t('group_description')}
             type='text'
             fullWidth
             variant='outlined'
-            value={tagInput}
-            onChange={handleTagInputChange}
-            onKeyDown={event => event.key === 'Enter' && handleAddTag()}
-            helperText='Press enter to add a tag'
+            value={groupDescription}
+            onChange={handleGroupDescriptionChange}
           />
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 1 }}>
-            {tags.map((tag, index) => (
-              <Chip
-                key={index}
-                label={tag}
-                onDelete={() => handleDeleteTag(tag)}
-              />
-            ))}
-          </Box>
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSubmit}>Create</Button>
+        <Button onClick={onClose}>{t('cancel')}</Button>
+        <Button onClick={handleCreateGroup}>{t('create')}</Button>
       </DialogActions>
     </Dialog>
   )

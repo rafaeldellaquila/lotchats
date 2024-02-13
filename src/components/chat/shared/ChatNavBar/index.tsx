@@ -15,13 +15,17 @@ import {
   ListItem,
   ListItemText,
   Box,
-  Avatar
+  Avatar,
+  ListItemAvatar
 } from '@mui/material'
+import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import MenuItemComponent from './ChatNavMenu'
+
+import { GroupMemberProps } from '@/@types/common'
 
 interface ReceiverProps {
   name: string
@@ -30,7 +34,7 @@ interface ReceiverProps {
 interface ChatNavBarProps {
   receiver: ReceiverProps
   onBack: () => void
-  members?: string[]
+  members?: GroupMemberProps[]
   isGroup: boolean
 }
 
@@ -43,8 +47,9 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
   const { t } = useTranslation()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [membersDialogOpen, setMembersDialogOpen] = useState(false)
+  const [groupMembers, setGroupMembers] = useState<GroupMemberProps[]>()
   const navigate = useNavigate()
-
+  const db = getFirestore()
   const menuItems = [
     { text: 'search', onClick: () => navigate('/') },
     {
@@ -72,7 +77,28 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
     setAnchorEl(null)
   }
 
-  const handleMembersDialogToggle = () => {
+  const handleMembersDialogToggle = async () => {
+    if (!membersDialogOpen && members) {
+      const memberDetailsPromise = members.map(async member => {
+        const userDocRef = doc(db, 'users', member.uid)
+        const userDocSnap = await getDoc(userDocRef)
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data()
+          return {
+            uid: member.uid,
+            name: userData.name,
+            avatarUrl: userData.avatarUrl
+          }
+        }
+        return null
+      })
+
+      const memberDetails = await Promise.all(memberDetailsPromise)
+      const filteredMemberDetails = memberDetails.filter(
+        member => member !== null
+      ) as GroupMemberProps[]
+      setGroupMembers(filteredMemberDetails)
+    }
     setMembersDialogOpen(!membersDialogOpen)
   }
 
@@ -83,14 +109,19 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
           <IconButton edge='start' color='inherit' onClick={onBack}>
             <ChevronLeftIcon />
           </IconButton>
-          <Avatar
-            src={receiver.avatarUrl}
-            sx={{ width: 40, height: 40, marginRight: 2 }}
-            alt='Avatar preview'
-          />
-          <Typography variant='h1' fontWeight={600}>
-            {receiver.name}
-          </Typography>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+            onClick={handleMembersDialogToggle}
+          >
+            <Avatar
+              src={receiver.avatarUrl}
+              sx={{ width: 40, height: 40, marginRight: 2 }}
+              alt='Avatar preview'
+            />
+            <Typography variant='h1' fontWeight={600}>
+              {receiver.name}
+            </Typography>
+          </Box>
         </Box>
         <IconButton color='inherit' onClick={handleClick}>
           <MoreVertIcon />
@@ -108,17 +139,23 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
             />
           ))}
         </Menu>
-        {members && (
+        {members !== undefined && (
           <Dialog open={membersDialogOpen} onClose={handleMembersDialogToggle}>
             <DialogTitle>{t('group_members')}</DialogTitle>
             <DialogContent>
-              <List>
-                {members.map((member, index) => (
-                  <ListItem key={index}>
-                    <ListItemText primary={member} />
-                  </ListItem>
-                ))}
-              </List>
+              {groupMembers !== undefined && (
+                <List>
+                  {groupMembers.map((member, index) => (
+                    <ListItem key={index}>
+                      <ListItemAvatar>
+                        {' '}
+                        <Avatar src={member.avatarUrl} />
+                      </ListItemAvatar>
+                      <ListItemText primary={member.name} />
+                    </ListItem>
+                  ))}
+                </List>
+              )}
             </DialogContent>
           </Dialog>
         )}

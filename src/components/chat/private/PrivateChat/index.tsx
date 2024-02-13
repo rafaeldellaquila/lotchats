@@ -34,8 +34,6 @@ const PrivateChat: React.FC<ChatProps> = ({ chatId, onBack }) => {
     avatarUrl: ''
   })
 
-  console.log(chatId)
-
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

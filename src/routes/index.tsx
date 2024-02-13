@@ -7,11 +7,11 @@ import ProtectedRoute from './ProtectedRoutes'
 
 import AuthLayout from '@/layout/AuthLayout'
 import UnauthLayout from '@/layout/UnauthLayout'
-import ChatPage from '@/pages/Auth/ChatPage'
 import ConfigPage from '@/pages/Auth/ConfigPage'
 import DiscoverPage from '@/pages/Auth/DiscoverPage'
 import GroupChatPage from '@/pages/Auth/GroupChatPage'
 import HomePage from '@/pages/Auth/HomePage'
+import PrivateChatPage from '@/pages/Auth/PrivateChatPage'
 import LoginPage from '@/pages/Unauth/LoginPage'
 import RegisterPage from '@/pages/Unauth/RegisterPage'
 import { setLoading, setUser } from '@/redux/slices/authSlice'
@@ -50,8 +50,8 @@ const RouterComponent = () => {
       <Route element={<ProtectedRoute />}>
         <Route element={<AuthLayout />}>
           <Route path='/home' element={<HomePage />} />
-          <Route path='/privatechat/:chatid' element={<ChatPage />} />
-          <Route path='/groupchat' element={<GroupChatPage />} />
+          <Route path='/privatechat/:chatid' element={<PrivateChatPage />} />
+          <Route path='/groupchat/:groupid' element={<GroupChatPage />} />
           <Route path='/discover' element={<DiscoverPage />} />
           <Route path='/config' element={<ConfigPage />} />
         </Route>

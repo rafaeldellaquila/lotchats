@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import PrivateChat from '@/components/chat/private/PrivateChat'
 
-const ChatPage: React.FC = () => {
+const PrivateChatPage: React.FC = () => {
   const navigate = useNavigate()
   const { chatid } = useParams<{ chatid: string }>()
 
@@ -21,4 +21,4 @@ const ChatPage: React.FC = () => {
   )
 }
 
-export default ChatPage
+export default PrivateChatPage
