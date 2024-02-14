@@ -1,7 +1,6 @@
 import { Timestamp } from 'firebase/firestore'
 
 export interface DrawerProps {
-  // Drawer - SearchModal
   open: boolean
   onClose: () => void
 }
@@ -49,11 +48,6 @@ export interface ContactProps {
   id: string
   name: string
   avatarUrl: string
-}
-
-export interface ChatProps extends UserProps {
-  // ChatCard
-  unreadCount: number
 }
 
 export interface MessageProps {

@@ -1,4 +1,5 @@
 {
+  "Grupos": "Grupos",
   "add_dialog_description": "Você deseja adicionar este contato?",
   "add_dialog_title": "Adicionar Contato",
   "agree": "Concordar",
@@ -35,6 +36,7 @@
   "new_password": "Nova senha",
   "password": "Senha",
   "password_dont_match": "Senhas não coincidem",
+  "private_chats": "Conversas privadas",
   "provide_group_name": "Informe um nome para o grupo",
   "quit": "Sair",
   "register": "Registrar",

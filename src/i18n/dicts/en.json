@@ -49,5 +49,7 @@
   "user_not_found": "User not found",
   "user_registered_successfully": "User Registered successfully",
   "user_updated_error": "Error updating user",
-  "user_updated_successfully": "User updated successfully"
+  "user_updated_successfully": "User updated successfully",
+  "private_chats": "Private Chats",
+  "Grupos": "Groups"
 }

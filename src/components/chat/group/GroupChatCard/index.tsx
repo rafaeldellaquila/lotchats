@@ -104,7 +104,7 @@ const GroupChatCard: React.FC<GroupProps> = ({
               {name}
             </Typography>
             <Chip
-              label={t('member_plural', { count: members.length })}
+              label={t('members', { count: members.length })}
               size='small'
               color='info'
               sx={{ fontSize: '0.7rem' }}
