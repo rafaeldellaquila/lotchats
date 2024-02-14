@@ -8,21 +8,11 @@ import {
   TextField,
   Avatar
 } from '@mui/material'
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  getFirestore,
-  serverTimestamp,
-  updateDoc
-} from 'firebase/firestore'
-import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { auth } from '@/firebase'
+import { useCreateGroup } from '@/hooks/useCreateGroup'
 
 const CreateGroupChatModal: React.FC<{
   open: boolean
@@ -30,6 +20,7 @@ const CreateGroupChatModal: React.FC<{
 }> = ({ open, onClose }) => {
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const { createGroup } = useCreateGroup()
   const [groupName, setGroupName] = useState('')
   const [groupDescription, setGroupDescription] = useState('')
   const [avatar, setAvatar] = useState<File | null>(null)
@@ -63,75 +54,13 @@ const CreateGroupChatModal: React.FC<{
     }
   }
 
-  const handleCreateGroup = async () => {
-    if (!groupName.trim()) {
-      console.error(t('provide_group_name'))
-      return
-    }
-
-    let avatarUrl = ''
-    if (avatar) {
-      try {
-        const storage = getStorage()
-        const storageRef = ref(
-          storage,
-          `group_avatars/${avatar.name}_${Date.now()}`
-        )
-        await uploadBytes(storageRef, avatar)
-        avatarUrl = await getDownloadURL(storageRef)
-      } catch (error) {
-        console.error(t('upload_avatar_error'), error)
-        return
-      }
-    }
-
-    const currentUserUid = auth.currentUser?.uid
-    if (!currentUserUid) return
-
-    const userDocRef = doc(getFirestore(), 'users', currentUserUid)
-    const userDocSnap = await getDoc(userDocRef)
-
-    let creatorAvatarUrl = ''
-    let creatorName = ''
-    if (userDocSnap.exists()) {
-      creatorAvatarUrl = userDocSnap.data().avatarUrl || ''
-      creatorName = userDocSnap.data().name || ''
-    } else {
-      console.error(t('creator_user_not_found'))
-    }
-    const db = getFirestore()
-
+  const handleCreateGroupClick = async () => {
     try {
-      const groupDocRef = await addDoc(collection(db, 'groups'), {
-        name: groupName,
-        description: groupDescription,
-        avatarUrl: avatarUrl,
-        createdAt: serverTimestamp(),
-        members: [
-          {
-            id: currentUserUid,
-            isAdmin: true,
-            avatarUrl: creatorAvatarUrl,
-            name: creatorName
-          }
-        ]
-      })
-
-      const userDocRef = doc(db, 'users', currentUserUid)
-      await getDoc(userDocRef).then(docSnap => {
-        if (docSnap.exists()) {
-          const existingGroups = docSnap.data().groups || []
-          const updatedGroups = [...existingGroups, groupDocRef.id]
-          updateDoc(userDocRef, {
-            groups: updatedGroups
-          })
-        }
-      })
-
+      const groupId = await createGroup(groupName, groupDescription, avatar)
       onClose()
-      navigate(`/groupchat/${groupDocRef.id}`)
+      navigate(`/groupchat/${groupId}`)
     } catch (error) {
-      console.error(t('create_group_error'), error)
+      console.error(error)
     }
   }
 
@@ -186,7 +115,7 @@ const CreateGroupChatModal: React.FC<{
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>{t('cancel')}</Button>
-        <Button onClick={handleCreateGroup}>{t('create')}</Button>
+        <Button onClick={handleCreateGroupClick}>{t('create')}</Button>
       </DialogActions>
     </Dialog>
   )
