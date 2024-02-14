@@ -1,25 +1,13 @@
-import {
-  PersonAddAlt1 as PersonAddIcon,
-  FavoriteBorder as FavoriteBorderIcon,
-  Favorite as FavoriteIcon
-} from '@mui/icons-material'
+import { PersonAddAlt1 as PersonAddIcon } from '@mui/icons-material'
 import { Avatar, Box, Card, CardActionArea, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 
+import { PreviewChatProps } from '@/@types/common'
 import { useModal } from '@/hooks/useModal'
 import { usePrivateChat } from '@/hooks/usePrivateChat'
 import { isContactAdded } from '@/utils/isContactAdded'
-import { toggleFavoriteContact } from '@/utils/toggleFavoriteContact'
 
-interface PrivateChatProps {
-  avatarUrl: string | undefined
-  name: string
-  messagePreview?: string
-  email?: string
-  id: string
-}
-
-const PrivateChatCard: React.FC<PrivateChatProps> = ({
+const PrivateChatCard: React.FC<PreviewChatProps> = ({
   avatarUrl,
   name,
   messagePreview,
@@ -29,26 +17,16 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
   const { toggleAddPersonModal } = useModal()
   const [contactAdded, setContactAdded] = useState<boolean>(false)
   const { handleContactChatClick } = usePrivateChat()
-  const [isFavorite, setIsFavorite] = useState<boolean>(false)
-
-  const handleToggleFavorite = async () => {
-    await toggleFavoriteContact(id)
-    setIsFavorite(!isFavorite)
-  }
 
   useEffect(() => {
     let isMounted = true
 
     const ContactsCheck = async () => {
       const contactAdded = await isContactAdded(id)
-      const favoriteStatus = await isContactAdded(id)
-
       if (isMounted) {
         setContactAdded(contactAdded)
-        setIsFavorite(favoriteStatus)
       }
     }
-
     ContactsCheck()
 
     return () => {
@@ -114,22 +92,6 @@ const PrivateChatCard: React.FC<PrivateChatProps> = ({
           <PersonAddIcon color='success' />
         </CardActionArea>
       )}
-
-      <CardActionArea
-        onClick={handleToggleFavorite}
-        sx={{
-          display: 'flex',
-          flex: 1,
-          p: '1rem',
-          alignItems: 'center'
-        }}
-      >
-        {isFavorite ? (
-          <FavoriteIcon color='error' />
-        ) : (
-          <FavoriteBorderIcon color='error' />
-        )}
-      </CardActionArea>
     </Card>
   )
 }

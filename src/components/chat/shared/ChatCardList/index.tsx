@@ -5,12 +5,7 @@ import { useTranslation } from 'react-i18next'
 import GroupChatCard from '../../group/GroupChatCard'
 import PrivateChatCard from '../../private/PrivateChatCard'
 
-import { PreviewChatProps } from '@/@types/common'
-
-interface ChatCardListProps {
-  title: string
-  chats: PreviewChatProps[]
-}
+import { ChatCardListProps } from '@/@types/common'
 
 const ChatCardList: React.FC<ChatCardListProps> = ({ chats, title }) => {
   const { t } = useTranslation()
@@ -38,7 +33,7 @@ const ChatCardList: React.FC<ChatCardListProps> = ({ chats, title }) => {
               id={chat.id}
               avatarUrl={chat.avatarUrl}
               name={chat.name}
-              description={chat.description}
+              description={chat.description!}
               members={chat.members!}
             />
           )

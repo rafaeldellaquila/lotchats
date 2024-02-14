@@ -23,6 +23,7 @@
   "error_contact_added": "Error adding Contact, try again",
   "error_on_load_user": "Error on load user",
   "failed_to_get_chat": "Fail to get chat",
+  "group_chat": "Groups",
   "group_description": "Group description",
   "group_name": "Group name",
   "group_not_found": "Group not found",
@@ -35,6 +36,7 @@
   "new_password": "New password",
   "password": "Password",
   "password_dont_match": "Passwords don't match",
+  "private_chats": "Private Chats",
   "provide_group_name": "Provide a group name",
   "quit": "Logout",
   "register": "Register",
@@ -49,7 +51,5 @@
   "user_not_found": "User not found",
   "user_registered_successfully": "User Registered successfully",
   "user_updated_error": "Error updating user",
-  "user_updated_successfully": "User updated successfully",
-  "private_chats": "Private Chats",
-  "Grupos": "Groups"
+  "user_updated_successfully": "User updated successfully"
 }

@@ -1,120 +1,35 @@
 import { Box, useTheme } from '@mui/material'
-import {
-  collection,
-  doc,
-  getDoc,
-  getFirestore,
-  onSnapshot,
-  orderBy,
-  query
-} from 'firebase/firestore'
-import { useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useEffect, useRef } from 'react'
 
 import ChatInput from '../../shared/ChatInput'
 import ChatNavBar from '../../shared/ChatNavBar'
 import MessageBubble from '../../shared/MessageBubble'
 
-import { MessageProps } from '@/@types/common'
-import { auth } from '@/firebase'
-
-interface ChatProps {
-  chatId: string
-  onBack: () => void
-}
+import { ChatProps } from '@/@types/common'
+import { useChatMessages } from '@/hooks/useChatMessages'
+import { useReceiverInfo } from '@/hooks/useReceiverInfo'
 
 const PrivateChat: React.FC<ChatProps> = ({ chatId, onBack }) => {
-  const db = getFirestore()
   const theme = useTheme()
-  const { t } = useTranslation()
-  const [messages, setMessages] = useState<MessageProps[]>([])
-  const [receiverContact, setReceiverContact] = useState<{
-    name: string
-    avatarUrl: string
-  }>({
-    name: '',
-    avatarUrl: ''
-  })
-
+  const messages = useChatMessages(chatId)
+  const receiverContact = useReceiverInfo(chatId)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  useEffect(() => {
-    if (!chatId) return
-
-    const chatRef = doc(db, `chats`, chatId)
-    const messagesRef = collection(db, `chats/${chatId}/messages`)
-    const q = query(messagesRef, orderBy('timestamp', 'asc'))
-
-    const unsubscribe = onSnapshot(q, querySnapshot => {
-      const fetchedMessages = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as MessageProps[]
-
-      setMessages(fetchedMessages)
-    })
-
-    getDoc(chatRef)
-      .then(docSnap => {
-        if (docSnap.exists()) {
-          const chatData = docSnap.data()
-          const members = chatData.members || []
-
-          const localReceiverId = members.find(
-            (id: string) => id !== auth.currentUser?.uid
-          )
-
-          if (localReceiverId) {
-            const receiverRef = doc(db, 'users', localReceiverId)
-            getDoc(receiverRef)
-              .then(userSnap => {
-                if (userSnap.exists()) {
-                  setReceiverContact({
-                    name: userSnap.data().name,
-                    avatarUrl: userSnap.data().avatarUrl
-                  })
-                } else {
-                  console.error(t('user_contact_not_found'))
-                }
-              })
-              .catch(error => {
-                console.error(t('error_on_load_user'), error)
-              })
-          }
-        } else {
-          console.error(t('chat_not_found'))
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching chat document:', error)
-      })
-
-    return () => unsubscribe()
-  }, [db, chatId, t])
-
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%'
-      }}
-    >
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <ChatNavBar receiver={receiverContact} onBack={onBack} isGroup={false} />
       <Box
         sx={{
           flexGrow: 1,
           overflowY: 'auto',
+          padding: theme.spacing(2),
           display: 'flex',
           flexDirection: 'column',
-          padding: theme.spacing(2),
-          '& > *:not(:first-of-type)': {
-            marginTop: theme.spacing(1)
-          }
+          '& > *:not(:first-of-type)': { marginTop: theme.spacing(1) }
         }}
       >
         {messages.map(message => (
@@ -122,16 +37,7 @@ const PrivateChat: React.FC<ChatProps> = ({ chatId, onBack }) => {
         ))}
         <div ref={messagesEndRef} />
       </Box>
-      <Box
-        sx={{
-          backgroundColor: theme.palette.background.paper,
-          borderRadius: '4px',
-          border: `2px solid ${theme.palette.primary.main}`,
-          margin: 2
-        }}
-      >
-        <ChatInput chatId={chatId} />
-      </Box>
+      <ChatInput chatId={chatId} />
     </Box>
   )
 }

@@ -5,6 +5,11 @@ export interface DrawerProps {
   onClose: () => void
 }
 
+export interface ChatProps {
+  chatId: string
+  onBack: () => void
+}
+
 export interface UserProps {
   name: string
   id: string
@@ -34,7 +39,13 @@ export interface PreviewChatProps {
   messagePreview: string
   isGroup?: boolean
   members?: GroupMemberProps[]
-  description: string
+  description?: string
+  email?: string
+}
+
+export interface ChatCardListProps {
+  title: string
+  chats: PreviewChatProps[]
 }
 
 export interface GroupMemberProps {
@@ -56,4 +67,11 @@ export interface MessageProps {
   text: string
   timestamp: Timestamp
   senderName?: string
+}
+
+export interface ChatNavBarProps {
+  receiver: Pick<UserProps, 'name' | 'avatarUrl'>
+  onBack: () => void
+  members?: GroupMemberProps[]
+  isGroup: boolean
 }
