@@ -85,10 +85,11 @@ const HomePage: React.FC = () => {
           return null
         })
       )
-
-      setChats(
-        chatsData.filter((chat): chat is PreviewChatProps => chat !== null)
+      const filteredChatsData = chatsData.filter(
+        (chat): chat is PreviewChatProps => chat !== null
       )
+
+      setChats(filteredChatsData)
       setIsLoading(false)
     }
 
