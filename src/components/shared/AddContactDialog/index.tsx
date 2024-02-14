@@ -10,7 +10,7 @@ import { arrayUnion, doc, getFirestore, updateDoc } from 'firebase/firestore'
 import { useTranslation } from 'react-i18next'
 
 import { auth } from '@/firebase'
-import { useModal } from '@/hooks/utils/useModal'
+import { useModal } from '@/hooks/useModal'
 
 const AddContactDialog: React.FC<{
   open: boolean

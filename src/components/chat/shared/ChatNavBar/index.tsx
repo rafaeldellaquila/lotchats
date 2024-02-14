@@ -27,7 +27,7 @@ import MenuItemComponent from './ChatNavMenu'
 
 import { GroupMemberProps } from '@/@types/common'
 import { auth } from '@/firebase'
-import { usePrivateChat } from '@/hooks/chat/usePrivateChat'
+import { usePrivateChat } from '@/hooks/usePrivateChat'
 
 interface ReceiverProps {
   name: string

@@ -10,7 +10,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import { ContactProps } from '@/@types/common'
-import { usePrivateChat } from '@/hooks/chat/usePrivateChat'
+import { usePrivateChat } from '@/hooks/usePrivateChat'
 
 const ContactList: React.FC<{ contacts: ContactProps[] }> = ({ contacts }) => {
   const { t } = useTranslation()

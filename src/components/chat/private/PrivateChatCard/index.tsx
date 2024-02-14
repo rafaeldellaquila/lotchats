@@ -6,8 +6,8 @@ import {
 import { Avatar, Box, Card, CardActionArea, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 
-import { usePrivateChat } from '@/hooks/chat/usePrivateChat'
-import { useModal } from '@/hooks/utils/useModal'
+import { useModal } from '@/hooks/useModal'
+import { usePrivateChat } from '@/hooks/usePrivateChat'
 import { isContactAdded } from '@/utils/isContactAdded'
 import { toggleFavoriteContact } from '@/utils/toggleFavoriteContact'
 

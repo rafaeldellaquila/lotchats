@@ -22,7 +22,7 @@ import ContactList from '../ContactList'
 import { ContactProps } from '@/@types/common'
 import { primaryTypographyStyles } from '@/components/shared/Navbar/styles'
 import { auth } from '@/firebase'
-import { useModal } from '@/hooks/utils/useModal'
+import { useModal } from '@/hooks/useModal'
 
 const CommunitySideMenu: React.FC = () => {
   const navigate = useNavigate()

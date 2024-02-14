@@ -18,9 +18,9 @@ import UserSideMenu from '../../user/UserSideMenu'
 import Drawer from '../Drawer'
 
 import { auth } from '@/firebase'
-import { useMediaQuery } from '@/hooks/utils/useMediaQueries'
-import { useModal } from '@/hooks/utils/useModal'
-import { useToggle } from '@/hooks/utils/useToggle'
+import { useMediaQuery } from '@/hooks/useMediaQueries'
+import { useModal } from '@/hooks/useModal'
+import { useToggle } from '@/hooks/useToggle'
 
 const NavBar: React.FC = () => {
   const { t } = useTranslation()

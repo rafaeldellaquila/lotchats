@@ -4,7 +4,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import CommunitySideMenu from '@/components/community/CommunitySideMenu'
 import Navbar from '@/components/shared/Navbar'
 import UserSideMenu from '@/components/user/UserSideMenu'
-import { useMediaQuery } from '@/hooks/utils/useMediaQueries'
+import { useMediaQuery } from '@/hooks/useMediaQueries'
 
 const AuthLayout: React.FC = () => {
   const [isLargeScreen] = useMediaQuery()

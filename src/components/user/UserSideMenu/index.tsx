@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { primaryTypographyStyles } from '@/components/shared/Navbar/styles'
 import { auth } from '@/firebase'
-import { useModal } from '@/hooks/utils/useModal'
+import { useModal } from '@/hooks/useModal'
 import { setLoading, setUser } from '@/redux/slices/authSlice'
 
 const UserSideMenu: React.FC = () => {
