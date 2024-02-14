@@ -27,7 +27,6 @@ const Drawer: React.FC<CustomDrawerProps> = ({
       }}
     >
       <IconButton
-        aria-label='close community drawer'
         onClick={toggle}
         sx={{ justifyContent: 'flex-start', p: '8px 16px' }}
       >

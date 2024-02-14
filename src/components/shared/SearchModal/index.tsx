@@ -92,7 +92,7 @@ const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
       navigate('/discover')
       onClose?.()
     } catch (error) {
-      console.error('Error during search: ', error)
+      console.error(t('search_error'), error)
     }
   }
 

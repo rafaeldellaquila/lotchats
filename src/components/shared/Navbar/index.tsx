@@ -55,14 +55,14 @@ const NavBar: React.FC = () => {
           const userData = userSnap.data()
           setCurrentUser({ name: userData.name, avatarUrl: userData.avatarUrl })
         } else {
-          console.log('Usuário não encontrado')
+          console.error(t('user_not_found'))
         }
       }
     }
 
     setIsLoading(true)
     fetchUserData()
-  }, [db])
+  }, [db, t])
 
   if (isLoading && currentUser === undefined) {
     return <CircularProgress />

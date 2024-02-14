@@ -70,7 +70,6 @@ const CommunitySideMenu: React.FC = () => {
       <List>
         <ListItem onClick={() => navigate('/home')} sx={{ cursor: 'pointer' }}>
           <ListItemIcon>
-            {' '}
             <HomeIcon />
           </ListItemIcon>
           <ListItemText

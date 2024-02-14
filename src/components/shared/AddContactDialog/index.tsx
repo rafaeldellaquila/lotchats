@@ -29,11 +29,11 @@ const AddContactDialog: React.FC<{
       contacts: arrayUnion(selectedContactId)
     })
       .then(() => {
-        console.log('Contato adicionado com sucesso.')
+        console.log(t('contact_added'))
         onClose()
       })
       .catch(error => {
-        console.error('Erro ao adicionar contato:', error)
+        console.error(t('error_contact_added'), error)
       })
   }
 
@@ -41,7 +41,7 @@ const AddContactDialog: React.FC<{
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{t('add_dialog_title')}</DialogTitle>
       <DialogContent>
-        <DialogContentText>{t('alert_dialog_description')}</DialogContentText>
+        <DialogContentText>{t('add_dialog_description')}</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>{t('disagree')}</Button>

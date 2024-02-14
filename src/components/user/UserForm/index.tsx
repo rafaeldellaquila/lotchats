@@ -102,11 +102,10 @@ const UserForm: React.FC = () => {
           formData.password
         )
       await updateUserInfo(userCredential.user.uid)
-      console.log('User registered successfully')
+      console.log(t('user_registered_successfully'))
       navigate('/home')
     } catch (error) {
-      console.error(error)
-      console.log('Error registering user')
+      console.error(t('user_registered_error'), error)
     }
   }
 
@@ -147,20 +146,19 @@ const UserForm: React.FC = () => {
           merge: true
         })
 
-        console.log('User updated successfully')
+        console.log(t('user_updated_successfully'))
       }
 
       navigate('/home')
     } catch (error) {
-      console.error(error)
-      console.log('Error updating user')
+      console.error(t('user_updated_error'), error)
     }
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (formData.password !== formData.confirmPassword) {
-      console.log("Passwords don't match")
+      console.error(t('password_dont_match'))
       return
     }
 
@@ -208,7 +206,7 @@ const UserForm: React.FC = () => {
       <Avatar
         src={avatarPreview}
         sx={{ width: 56, height: 56, mb: 2 }}
-        alt='Avatar preview'
+        alt={formData.name}
       />
       <Button variant='contained' component='label' sx={{ mt: 2 }}>
         {t('upload_avatar')}

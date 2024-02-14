@@ -5,12 +5,14 @@ import {
   serverTimestamp,
   setDoc
 } from 'firebase/firestore'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { auth } from '@/firebase'
 
 export const usePrivateChat = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const handleContactChatClick = async (contactId: string) => {
     const db = getFirestore()
@@ -33,7 +35,7 @@ export const usePrivateChat = () => {
 
         navigate(`/privatechat/${chatId}`)
       } catch (error) {
-        console.error('Failed to create or access the chat:', error)
+        console.error(t('failed_to_get_chat'), error)
       }
     }
   }

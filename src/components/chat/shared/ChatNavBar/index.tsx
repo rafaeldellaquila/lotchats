@@ -43,8 +43,7 @@ interface ChatNavBarProps {
 const ChatNavBar: React.FC<ChatNavBarProps> = ({
   receiver,
   onBack,
-  members,
-  isGroup
+  members
 }) => {
   const { t } = useTranslation()
   const { handleContactChatClick } = usePrivateChat()
@@ -65,13 +64,6 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
       onClick: () => {}
     }
   ]
-
-  if (isGroup) {
-    menuItems.push({
-      text: 'view_members',
-      onClick: () => setMembersDialogOpen(!membersDialogOpen)
-    })
-  }
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -120,7 +112,7 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
             <Avatar
               src={receiver.avatarUrl}
               sx={{ width: 40, height: 40, marginRight: 2 }}
-              alt='Avatar preview'
+              alt={receiver.name}
             />
             <Typography variant='h1' fontWeight={600}>
               {receiver.name}
@@ -157,7 +149,7 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
                       sx={{ cursor: 'pointer' }}
                     >
                       <ListItemAvatar>
-                        <Avatar src={member.avatarUrl} />
+                        <Avatar src={member.avatarUrl} alt={member.name} />
                       </ListItemAvatar>
                       <ListItemText primary={member.name} />
                     </ListItemButton>

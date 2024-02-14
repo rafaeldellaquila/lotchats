@@ -40,13 +40,12 @@ const HomePage: React.FC = () => {
         dispatch(setLoading(false))
         navigate('/')
       } catch (error) {
-        console.error('Falha ao realizar logout', error)
+        console.error(error)
         // Tratar o erro
       }
     }
 
     if (!userId) {
-      console.log(`caiu aqui`)
       setIsLoading(false)
       handleLogout()
       return
@@ -96,7 +95,7 @@ const HomePage: React.FC = () => {
     const fetchGroups = async () => {
       const groupsRef = collection(db, 'groups')
       const querySnapshot = await getDocs(groupsRef)
-      const groupsData = [] // Inicializa um array para armazenar os dados dos grupos
+      const groupsData = []
 
       for (const doc of querySnapshot.docs) {
         const groupId = doc.id
@@ -149,7 +148,6 @@ const HomePage: React.FC = () => {
 
   return (
     <>
-      {/* <FavoriteList FavoriteProps={mockFavoriteProps} maxVisible={10} /> */}
       <ChatCardList title={t('private_chats')} chats={chats} />
       <ChatCardList title={t('group_chats')} chats={groups} />
     </>

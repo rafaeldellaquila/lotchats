@@ -31,7 +31,7 @@ const UserSideMenu: React.FC = () => {
   const { toggleCreateGroupModal } = useModal()
 
   const [currentUser, setCurrentUser] = useState({
-    name: 'loading',
+    name: '',
     avatarUrl: ''
   })
 
@@ -46,7 +46,7 @@ const UserSideMenu: React.FC = () => {
       dispatch(setLoading(false))
       navigate('/')
     } catch (error) {
-      console.error('Falha ao realizar logout', error)
+      console.error(error)
       // Tratar o erro
     }
   }
@@ -61,13 +61,13 @@ const UserSideMenu: React.FC = () => {
           const userData = userSnap.data()
           setCurrentUser({ name: userData.name, avatarUrl: userData.avatarUrl })
         } else {
-          console.log('Usuário não encontrado')
+          console.error(t('user_not_found'))
         }
       }
     }
 
     fetchUserData()
-  }, [db])
+  }, [db, t])
 
   return (
     <Paper sx={{ height: '100%', overflow: 'hidden' }} elevation={1}>

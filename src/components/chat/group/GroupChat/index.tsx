@@ -9,6 +9,7 @@ import {
   query
 } from 'firebase/firestore'
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import ChatInput from '../../shared/ChatInput'
 import ChatNavBar from '../../shared/ChatNavBar'
@@ -24,6 +25,7 @@ interface GroupChatProps {
 const GroupChat: React.FC<GroupChatProps> = ({ groupId, onBack }) => {
   const db = getFirestore()
   const theme = useTheme()
+  const { t } = useTranslation()
   const [messages, setMessages] = useState<MessageProps[]>([])
   const [groupInfo, setGroupInfo] = useState({
     name: '',
@@ -41,7 +43,6 @@ const GroupChat: React.FC<GroupChatProps> = ({ groupId, onBack }) => {
 
     const groupRef = doc(db, 'groups', groupId)
 
-    // Fetch group info and members
     getDoc(groupRef).then(docSnap => {
       if (docSnap.exists()) {
         const data = docSnap.data()
@@ -51,7 +52,7 @@ const GroupChat: React.FC<GroupChatProps> = ({ groupId, onBack }) => {
           members: data.members || []
         })
       } else {
-        console.error('Group document not found')
+        console.error(t('group_not_found'))
       }
     })
 
@@ -68,7 +69,7 @@ const GroupChat: React.FC<GroupChatProps> = ({ groupId, onBack }) => {
     })
 
     return () => unsubscribe()
-  }, [db, groupId])
+  }, [db, groupId, t])
 
   return (
     <Box

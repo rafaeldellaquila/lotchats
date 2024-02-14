@@ -9,6 +9,7 @@ import {
   query
 } from 'firebase/firestore'
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import ChatInput from '../../shared/ChatInput'
 import ChatNavBar from '../../shared/ChatNavBar'
@@ -25,6 +26,7 @@ interface ChatProps {
 const PrivateChat: React.FC<ChatProps> = ({ chatId, onBack }) => {
   const db = getFirestore()
   const theme = useTheme()
+  const { t } = useTranslation()
   const [messages, setMessages] = useState<MessageProps[]>([])
   const [receiverContact, setReceiverContact] = useState<{
     name: string
@@ -76,15 +78,15 @@ const PrivateChat: React.FC<ChatProps> = ({ chatId, onBack }) => {
                     avatarUrl: userSnap.data().avatarUrl
                   })
                 } else {
-                  console.error('Receiver user not found')
+                  console.error(t('user_contact_not_found'))
                 }
               })
               .catch(error => {
-                console.error('Error fetching receiver user:', error)
+                console.error(t('error_on_load_user'), error)
               })
           }
         } else {
-          console.error('Chat document not found')
+          console.error(t('chat_not_found'))
         }
       })
       .catch(error => {
@@ -92,7 +94,7 @@ const PrivateChat: React.FC<ChatProps> = ({ chatId, onBack }) => {
       })
 
     return () => unsubscribe()
-  }, [db, chatId])
+  }, [db, chatId, t])
 
   return (
     <Box

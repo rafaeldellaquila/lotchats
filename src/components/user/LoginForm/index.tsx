@@ -22,15 +22,15 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setError('') // Limpa erros anteriores
+    setError('')
 
     try {
       await signInWithEmailAndPassword(auth, email, password)
       navigate('/home')
     } catch (error) {
       // Trata erros de login
-      console.error('Login error:', error)
-      setError('Failed to log in. Please check your credentials.')
+      console.error(t('login_error'), error)
+      setError(t('login_error'))
     }
   }
 
@@ -83,9 +83,6 @@ const LoginForm: React.FC = () => {
       >
         <Link href='/register' variant='body2'>
           {t('register')}
-        </Link>
-        <Link href='/forgot-password' variant='body2'>
-          {t('forgot_password')}
         </Link>
       </Box>
     </Box>

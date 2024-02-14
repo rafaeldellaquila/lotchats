@@ -65,7 +65,7 @@ const CreateGroupChatModal: React.FC<{
 
   const handleCreateGroup = async () => {
     if (!groupName.trim()) {
-      alert(t('provide_group_name'))
+      console.error(t('provide_group_name'))
       return
     }
 
@@ -80,18 +80,13 @@ const CreateGroupChatModal: React.FC<{
         await uploadBytes(storageRef, avatar)
         avatarUrl = await getDownloadURL(storageRef)
       } catch (error) {
-        console.error('Error uploading avatar:', error)
-        alert(t('upload_error'))
+        console.error(t('upload_avatar_error'), error)
         return
       }
     }
 
     const currentUserUid = auth.currentUser?.uid
-    if (!currentUserUid) {
-      console.error('No current user UID found')
-      alert(t('user_error'))
-      return
-    }
+    if (!currentUserUid) return
 
     const userDocRef = doc(getFirestore(), 'users', currentUserUid)
     const userDocSnap = await getDoc(userDocRef)
@@ -102,7 +97,7 @@ const CreateGroupChatModal: React.FC<{
       creatorAvatarUrl = userDocSnap.data().avatarUrl || ''
       creatorName = userDocSnap.data().name || ''
     } else {
-      console.error('Creator user document not found')
+      console.error(t('creator_user_not_found'))
     }
     const db = getFirestore()
 
@@ -136,8 +131,7 @@ const CreateGroupChatModal: React.FC<{
       onClose()
       navigate(`/groupchat/${groupDocRef.id}`)
     } catch (error) {
-      console.error('Error creating group:', error)
-      alert(t('creation_error'))
+      console.error(t('create_group_error'), error)
     }
   }
 

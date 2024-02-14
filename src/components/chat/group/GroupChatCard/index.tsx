@@ -15,6 +15,7 @@ import {
   getDoc
 } from 'firebase/firestore'
 import { MouseEvent, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { GroupProps } from '@/@types/common'
@@ -31,6 +32,7 @@ const GroupChatCard: React.FC<GroupProps> = ({
   const [isMember, setIsMember] = useState(false)
   const currentUserUid = auth.currentUser?.uid
   const db = getFirestore()
+  const { t } = useTranslation()
 
   useEffect(() => {
     setIsMember(members.some(member => member.id === currentUserUid))
@@ -45,7 +47,7 @@ const GroupChatCard: React.FC<GroupProps> = ({
     const userSnap = await getDoc(userRef)
 
     if (!userSnap.exists()) {
-      console.log('No such user!')
+      console.log(t('user_not_found'))
       return
     }
 
@@ -102,7 +104,7 @@ const GroupChatCard: React.FC<GroupProps> = ({
               {name}
             </Typography>
             <Chip
-              label={`${members.length} members`}
+              label={t('member_plural', { count: members.length })}
               size='small'
               color='info'
               sx={{ fontSize: '0.7rem' }}

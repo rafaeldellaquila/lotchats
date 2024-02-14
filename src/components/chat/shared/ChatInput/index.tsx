@@ -9,6 +9,7 @@ import {
   serverTimestamp
 } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { auth } from '@/firebase'
 
@@ -16,8 +17,9 @@ const ChatInput: React.FC<{ chatId: string; isGroup?: boolean }> = ({
   chatId,
   isGroup = false
 }) => {
-  const [message, setMessage] = useState('')
   const db = getFirestore()
+  const { t } = useTranslation()
+  const [message, setMessage] = useState('')
   const [senderName, setSenderName] = useState('')
 
   const sendMessage = async () => {
@@ -54,13 +56,13 @@ const ChatInput: React.FC<{ chatId: string; isGroup?: boolean }> = ({
         if (docSnap.exists()) {
           setSenderName(docSnap.data().name)
         } else {
-          console.log('No such document!')
+          console.error(t('user_not_found'))
         }
       }
     }
 
     fetchUserName()
-  }, [db])
+  }, [db, t])
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px' }}>
