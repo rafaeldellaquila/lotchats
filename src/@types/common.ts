@@ -20,7 +20,12 @@ export interface GroupProps {
   name: string
   description: string
   members: GroupMemberProps[]
-  createdAt?: Timestamp
+  createdAt?: Timestamp | string
+}
+
+export interface SearchResults {
+  privateChats: UserProps[]
+  groupChats: GroupProps[]
 }
 
 export interface PreviewChatProps {

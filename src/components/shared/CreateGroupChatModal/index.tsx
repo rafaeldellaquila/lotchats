@@ -95,9 +95,12 @@ const CreateGroupChatModal: React.FC<{
 
     const userDocRef = doc(getFirestore(), 'users', currentUserUid)
     const userDocSnap = await getDoc(userDocRef)
+
     let creatorAvatarUrl = ''
+    let creatorName = ''
     if (userDocSnap.exists()) {
       creatorAvatarUrl = userDocSnap.data().avatarUrl || ''
+      creatorName = userDocSnap.data().name || ''
     } else {
       console.error('Creator user document not found')
     }
@@ -107,13 +110,14 @@ const CreateGroupChatModal: React.FC<{
       const groupDocRef = await addDoc(collection(db, 'groups'), {
         name: groupName,
         description: groupDescription,
-        groupAvatarUrl: avatarUrl,
+        avatarUrl: avatarUrl,
         createdAt: serverTimestamp(),
         members: [
           {
             id: currentUserUid,
             isAdmin: true,
-            avatarUrl: creatorAvatarUrl
+            avatarUrl: creatorAvatarUrl,
+            name: creatorName
           }
         ]
       })

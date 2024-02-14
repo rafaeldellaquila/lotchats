@@ -1,36 +1,56 @@
 import { Box, List, ListItem, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 
-import { UserProps } from '@/@types/common'
+import GroupChatCard from '@/components/chat/group/GroupChatCard'
 import PrivateChatCard from '@/components/chat/private/PrivateChatCard'
+import { selectSearchResults } from '@/redux/slices/searchSlice'
 
-interface SearchResultsListProps {
-  searchResults: UserProps[]
-}
-
-const SearchResultsList: React.FC<SearchResultsListProps> = ({
-  searchResults
-}) => {
+const SearchResultsList: React.FC = () => {
   const { t } = useTranslation()
+
+  const { privateChats, groupChats } = useSelector(selectSearchResults)
 
   return (
     <Box>
-      <Typography variant='body1' fontWeight={600}>
-        {t('user')}
-      </Typography>
-      <List sx={{ p: 0 }}>
-        {searchResults.map((user: UserProps) => (
-          <ListItem sx={{ p: 0 }} key={user.id}>
-            <PrivateChatCard
-              isGroupChat={false}
-              name={user.name}
-              email={user.email}
-              id={user.id}
-              avatarUrl={user.avatarUrl}
-            />
-          </ListItem>
-        ))}
-      </List>
+      {privateChats.length > 0 && (
+        <>
+          <Typography variant='body1' fontWeight={600}>
+            {t('user')}
+          </Typography>
+          <List sx={{ p: 0 }}>
+            {privateChats.map(chat => (
+              <ListItem sx={{ p: 0 }} key={chat.id}>
+                <PrivateChatCard
+                  avatarUrl={chat.avatarUrl}
+                  name={chat.name}
+                  id={chat.id}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </>
+      )}
+      {groupChats.length > 0 && (
+        <>
+          <Typography variant='body1' fontWeight={600}>
+            {t('group_chat')}
+          </Typography>
+          <List sx={{ p: 0 }}>
+            {groupChats.map(chat => (
+              <ListItem sx={{ p: 0 }} key={chat.id}>
+                <GroupChatCard
+                  id={chat.id}
+                  avatarUrl={chat.avatarUrl}
+                  name={chat.name}
+                  description={chat.description}
+                  members={chat.members}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </>
+      )}
     </Box>
   )
 }

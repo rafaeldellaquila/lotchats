@@ -13,7 +13,8 @@ import {
   query,
   where,
   getDocs,
-  getFirestore
+  getFirestore,
+  Timestamp
 } from 'firebase/firestore'
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -66,21 +67,32 @@ const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
       const foundUsers = usersDocs.docs.map(doc => ({
         ...(doc.data() as UserProps)
       }))
-      const foundGroups = groupsDocs.docs.map(doc => ({
-        ...(doc.data() as GroupProps)
-      }))
+      const foundGroups = groupsDocs.docs.map(doc => {
+        const data = doc.data() as GroupProps
+        const day = (data?.createdAt as Timestamp).toDate().toISOString()
+
+        return {
+          ...data,
+          id: doc.id,
+          createdAt: day
+        }
+      })
+
+      console.log({
+        privateChats: foundUsers,
+        groupChats: foundGroups
+      })
 
       dispatch(
         setSearchResults({
-          private_chats: foundUsers,
-          group_chats: foundGroups
+          privateChats: foundUsers,
+          groupChats: foundGroups
         })
       )
       navigate('/discover')
       onClose?.()
     } catch (error) {
       console.error('Error during search: ', error)
-      // tratar erros
     }
   }
 

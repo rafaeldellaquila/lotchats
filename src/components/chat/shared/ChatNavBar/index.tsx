@@ -12,11 +12,11 @@ import {
   DialogTitle,
   DialogContent,
   List,
-  ListItem,
   ListItemText,
   Box,
   Avatar,
-  ListItemAvatar
+  ListItemAvatar,
+  ListItemButton
 } from '@mui/material'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { useState } from 'react'
@@ -26,6 +26,8 @@ import { useNavigate } from 'react-router-dom'
 import MenuItemComponent from './ChatNavMenu'
 
 import { GroupMemberProps } from '@/@types/common'
+import { auth } from '@/firebase'
+import { usePrivateChat } from '@/hooks/chat/usePrivateChat'
 
 interface ReceiverProps {
   name: string
@@ -45,9 +47,11 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
   isGroup
 }) => {
   const { t } = useTranslation()
+  const { handleContactChatClick } = usePrivateChat()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [membersDialogOpen, setMembersDialogOpen] = useState(false)
   const [groupMembers, setGroupMembers] = useState<GroupMemberProps[]>()
+  const currentUser = auth.currentUser
   const navigate = useNavigate()
   const db = getFirestore()
   const menuItems = [
@@ -145,14 +149,18 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
             <DialogContent>
               {groupMembers !== undefined && (
                 <List>
-                  {groupMembers.map((member, index) => (
-                    <ListItem key={index}>
+                  {groupMembers.map(member => (
+                    <ListItemButton
+                      key={member.id}
+                      onClick={() => handleContactChatClick(member.id)}
+                      disabled={member.id === currentUser?.uid}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <ListItemAvatar>
-                        {' '}
                         <Avatar src={member.avatarUrl} />
                       </ListItemAvatar>
                       <ListItemText primary={member.name} />
-                    </ListItem>
+                    </ListItemButton>
                   ))}
                 </List>
               )}

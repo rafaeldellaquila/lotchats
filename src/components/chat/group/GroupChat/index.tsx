@@ -78,7 +78,12 @@ const GroupChat: React.FC<GroupChatProps> = ({ groupId, onBack }) => {
         height: '100%'
       }}
     >
-      <ChatNavBar receiver={groupInfo} onBack={onBack} isGroup={true} />
+      <ChatNavBar
+        receiver={groupInfo}
+        onBack={onBack}
+        isGroup={true}
+        members={groupInfo.members}
+      />
       <Box
         sx={{
           flexGrow: 1,
