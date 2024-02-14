@@ -9,8 +9,9 @@ import {
   CircularProgress
 } from '@mui/material'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
 import CommunitySideMenu from '../../community/CommunitySideMenu'
@@ -21,6 +22,8 @@ import { auth } from '@/firebase'
 import { useMediaQuery } from '@/hooks/useMediaQueries'
 import { useModal } from '@/hooks/useModal'
 import { useToggle } from '@/hooks/useToggle'
+import { setLoading, setUser } from '@/redux/slices/authSlice'
+import { RootState } from '@/redux/store'
 
 const NavBar: React.FC = () => {
   const { t } = useTranslation()
@@ -28,24 +31,23 @@ const NavBar: React.FC = () => {
   const { pathname } = useLocation()
   const { toggleSearchModal } = useModal()
   const db = getFirestore()
-  const [currentUser, setCurrentUser] = useState<{
-    name: string
-    avatarUrl: string
-  }>()
 
-  const [isLoading, setIsLoading] = useState<boolean>()
+  const dispatch = useDispatch()
+  const { currentUser, isLoading } = useSelector(
+    (state: RootState) => state.user
+  )
   const [isCommunityDrawerOpen, toggleCommunityDrawer] = useToggle()
   const [isUserDrawerOpen, toggleUserDrawer] = useToggle()
 
   const handleTitles = () => {
-    if (pathname === '/') return t('home')
+    if (pathname === '/home') return t('home')
     if (pathname === '/discover') return t('discover')
     if (pathname.toString().includes('chat')) return ' '
     return
   }
 
   useEffect(() => {
-    setIsLoading(false)
+    dispatch(setLoading(true))
     const fetchUserData = async () => {
       const userAuth = auth.currentUser
       if (userAuth) {
@@ -53,18 +55,26 @@ const NavBar: React.FC = () => {
         const userSnap = await getDoc(userRef)
         if (userSnap.exists()) {
           const userData = userSnap.data()
-          setCurrentUser({ name: userData.name, avatarUrl: userData.avatarUrl })
+          dispatch(
+            setUser({
+              name: userData.name,
+              avatarUrl: userData.avatarUrl,
+              email: userData.email,
+              id: userAuth.uid
+            })
+          )
         } else {
           console.error(t('user_not_found'))
+          dispatch(setUser(null))
         }
       }
+      dispatch(setLoading(false))
     }
 
-    setIsLoading(true)
     fetchUserData()
-  }, [db, t])
+  }, [db, dispatch, t])
 
-  if (isLoading && currentUser === undefined) {
+  if (isLoading) {
     return <CircularProgress />
   }
 

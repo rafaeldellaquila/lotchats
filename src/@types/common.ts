@@ -36,7 +36,7 @@ export interface PreviewChatProps {
   id: string
   avatarUrl: string
   name: string
-  messagePreview: string
+  messagePreview?: string
   isGroup?: boolean
   members?: GroupMemberProps[]
   description?: string

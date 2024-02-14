@@ -8,14 +8,6 @@ import {
   Modal,
   OutlinedInput
 } from '@mui/material'
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  getFirestore,
-  Timestamp
-} from 'firebase/firestore'
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -23,77 +15,30 @@ import { useNavigate } from 'react-router-dom'
 
 import { searchModalStyles } from '../Navbar/styles'
 
-import { DrawerProps, GroupProps, UserProps } from '@/@types/common'
+import { useFirestoreQuery } from '@/hooks/useFirestoreQuery'
 import { setSearchResults } from '@/redux/slices/searchSlice'
 
-const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
+interface SearchModalProps {
+  open: boolean
+  onClose: () => void
+}
+
+const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const [searchTerm, setSearchTerm] = useState<string>('')
   const navigate = useNavigate()
+  const { fetchQueryResults } = useFirestoreQuery()
 
-  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
   }
 
-  const handleSearchSubmit = async (): Promise<void> => {
-    if (!searchTerm.trim()) return
-
-    const db = getFirestore()
-
-    const usersQuery = searchTerm.includes('@')
-      ? query(
-          collection(db, 'users'),
-          where('email', '==', searchTerm.toLowerCase())
-        )
-      : query(
-          collection(db, 'users'),
-          where('name', '>=', searchTerm),
-          where('name', '<=', searchTerm + '\uf8ff')
-        )
-
-    const groupsQuery = query(
-      collection(db, 'groups'),
-      where('name', '>=', searchTerm),
-      where('name', '<=', searchTerm + '\uf8ff')
-    )
-
-    try {
-      const [usersDocs, groupsDocs] = await Promise.all([
-        getDocs(usersQuery),
-        getDocs(groupsQuery)
-      ])
-
-      const foundUsers = usersDocs.docs.map(doc => ({
-        ...(doc.data() as UserProps)
-      }))
-      const foundGroups = groupsDocs.docs.map(doc => {
-        const data = doc.data() as GroupProps
-        const day = (data?.createdAt as Timestamp).toDate().toISOString()
-
-        return {
-          ...data,
-          id: doc.id,
-          createdAt: day
-        }
-      })
-
-      console.log({
-        privateChats: foundUsers,
-        groupChats: foundGroups
-      })
-
-      dispatch(
-        setSearchResults({
-          privateChats: foundUsers,
-          groupChats: foundGroups
-        })
-      )
-      navigate('/discover')
-      onClose?.()
-    } catch (error) {
-      console.error(t('search_error'), error)
-    }
+  const handleSearchSubmit = async () => {
+    const { users, groups } = await fetchQueryResults(searchTerm)
+    dispatch(setSearchResults({ privateChats: users, groupChats: groups }))
+    onClose()
+    navigate('/discover')
   }
 
   return (
@@ -113,12 +58,7 @@ const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
             autoFocus
             value={searchTerm}
             onChange={handleSearchChange}
-            onKeyDown={event => {
-              if (event.key === 'Enter') {
-                event.preventDefault()
-                handleSearchSubmit()
-              }
-            }}
+            onKeyDown={event => event.key === 'Enter' && handleSearchSubmit()}
             label={t('search')}
             endAdornment={
               <InputAdornment position='end'>

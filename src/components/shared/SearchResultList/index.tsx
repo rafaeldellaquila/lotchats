@@ -22,7 +22,7 @@ const SearchResultsList: React.FC = () => {
             {privateChats.map(chat => (
               <ListItem sx={{ p: 0 }} key={chat.id}>
                 <PrivateChatCard
-                  avatarUrl={chat.avatarUrl}
+                  avatarUrl={chat.avatarUrl ? chat.avatarUrl : ''}
                   name={chat.name}
                   id={chat.id}
                 />

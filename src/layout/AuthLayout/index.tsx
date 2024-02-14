@@ -27,7 +27,7 @@ const AuthLayout: React.FC = () => {
           </Box>
         )}
         <Box sx={{ flexGrow: 1, overflow: 'hidden' }}>
-          {isLargeScreen && pathname === '/chat' && <Navbar />}
+          {isLargeScreen && pathname !== '/chat' && <Navbar />}
           <Outlet />
         </Box>
         {isLargeScreen && (
