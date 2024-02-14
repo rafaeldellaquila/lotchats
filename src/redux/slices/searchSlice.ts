@@ -1,24 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { UserProps } from '@/@types/common'
+import { GroupProps, UserProps } from '@/@types/common'
+
+interface SearchResultsPayload {
+  private_chats: UserProps[]
+  group_chats: GroupProps[]
+}
 
 interface SearchState {
-  searchResults: UserProps[]
+  searchResults: SearchResultsPayload
 }
 
 const initialState: SearchState = {
-  searchResults: []
+  searchResults: {
+    private_chats: [],
+    group_chats: []
+  }
 }
 
 export const searchSlice = createSlice({
   name: 'search',
   initialState,
   reducers: {
-    setSearchResults: (state, action: PayloadAction<UserProps[]>) => {
+    setSearchResults: (state, action: PayloadAction<SearchResultsPayload>) => {
       state.searchResults = action.payload
     },
     clearSearchResults: state => {
-      state.searchResults = []
+      state.searchResults = { private_chats: [], group_chats: [] }
     }
   }
 })

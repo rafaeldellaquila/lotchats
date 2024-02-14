@@ -14,7 +14,8 @@ import {
   doc,
   getDoc,
   getFirestore,
-  serverTimestamp
+  serverTimestamp,
+  updateDoc
 } from 'firebase/firestore'
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
 import { useState } from 'react'
@@ -100,9 +101,9 @@ const CreateGroupChatModal: React.FC<{
     } else {
       console.error('Creator user document not found')
     }
+    const db = getFirestore()
 
     try {
-      const db = getFirestore()
       const groupDocRef = await addDoc(collection(db, 'groups'), {
         name: groupName,
         description: groupDescription,
@@ -115,6 +116,17 @@ const CreateGroupChatModal: React.FC<{
             avatarUrl: creatorAvatarUrl
           }
         ]
+      })
+
+      const userDocRef = doc(db, 'users', currentUserUid)
+      await getDoc(userDocRef).then(docSnap => {
+        if (docSnap.exists()) {
+          const existingGroups = docSnap.data().groups || []
+          const updatedGroups = [...existingGroups, groupDocRef.id]
+          updateDoc(userDocRef, {
+            groups: updatedGroups
+          })
+        }
       })
 
       onClose()

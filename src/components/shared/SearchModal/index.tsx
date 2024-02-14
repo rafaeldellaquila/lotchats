@@ -22,16 +22,13 @@ import { useNavigate } from 'react-router-dom'
 
 import { searchModalStyles } from '../Navbar/styles'
 
-import { DrawerProps, UserProps } from '@/@types/common'
-import { auth } from '@/firebase'
+import { DrawerProps, GroupProps, UserProps } from '@/@types/common'
 import { setSearchResults } from '@/redux/slices/searchSlice'
 
 const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const [searchTerm, setSearchTerm] = useState<string>('')
-  const currentUserEmail = auth.currentUser?.email
-  const db = getFirestore()
   const navigate = useNavigate()
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -40,31 +37,51 @@ const SearchModal: React.FC<DrawerProps> = ({ open, onClose }) => {
 
   const handleSearchSubmit = async (): Promise<void> => {
     if (!searchTerm.trim()) return
-    const usersRef = collection(db, 'users')
-    const searchQuery = query(
-      usersRef,
-      where('email', '==', searchTerm.toLowerCase())
+
+    const db = getFirestore()
+
+    const usersQuery = searchTerm.includes('@')
+      ? query(
+          collection(db, 'users'),
+          where('email', '==', searchTerm.toLowerCase())
+        )
+      : query(
+          collection(db, 'users'),
+          where('name', '>=', searchTerm),
+          where('name', '<=', searchTerm + '\uf8ff')
+        )
+
+    const groupsQuery = query(
+      collection(db, 'groups'),
+      where('name', '>=', searchTerm),
+      where('name', '<=', searchTerm + '\uf8ff')
     )
-    const querySnapshot = await getDocs(searchQuery)
 
-    const results: UserProps[] = querySnapshot.docs
-      .map(
-        doc =>
-          ({
-            id: doc.id,
-            name: doc.data().name,
-            email: doc.data().email,
-            avatarUrl: doc.data().avatarUrl,
-            celNumber: doc.data().celNumber
-          }) as UserProps
-      )
-      .filter(
-        user => user.email.toLowerCase() !== currentUserEmail?.toLowerCase()
-      )
+    try {
+      const [usersDocs, groupsDocs] = await Promise.all([
+        getDocs(usersQuery),
+        getDocs(groupsQuery)
+      ])
 
-    dispatch(setSearchResults(results))
-    navigate('/discover')
-    onClose?.()
+      const foundUsers = usersDocs.docs.map(doc => ({
+        ...(doc.data() as UserProps)
+      }))
+      const foundGroups = groupsDocs.docs.map(doc => ({
+        ...(doc.data() as GroupProps)
+      }))
+
+      dispatch(
+        setSearchResults({
+          private_chats: foundUsers,
+          group_chats: foundGroups
+        })
+      )
+      navigate('/discover')
+      onClose?.()
+    } catch (error) {
+      console.error('Error during search: ', error)
+      // tratar erros
+    }
   }
 
   return (

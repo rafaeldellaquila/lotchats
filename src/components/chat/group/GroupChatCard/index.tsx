@@ -8,17 +8,9 @@ import {
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
-import { GroupMemberProps } from '@/@types/common'
+import { GroupProps } from '@/@types/common'
 
-interface GroupChatCardProps {
-  id: string
-  avatarUrl: string
-  name: string
-  description: string
-  members: GroupMemberProps[]
-}
-
-const GroupChatCard: React.FC<GroupChatCardProps> = ({
+const GroupChatCard: React.FC<GroupProps> = ({
   id,
   avatarUrl,
   name,

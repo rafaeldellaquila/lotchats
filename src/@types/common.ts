@@ -14,6 +14,15 @@ export interface UserProps {
   celNumber: string
 }
 
+export interface GroupProps {
+  id: string
+  avatarUrl: string
+  name: string
+  description: string
+  members: GroupMemberProps[]
+  createdAt?: Timestamp
+}
+
 export interface PreviewChatProps {
   id: string
   avatarUrl: string
