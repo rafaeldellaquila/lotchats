@@ -74,6 +74,36 @@ const theme = createTheme({
           fontWeight: 700
         }
       }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& label.Mui-focused': {
+            color: '#A979E6' // Ou theme.palette.primary.main se quiser referenciar diretamente da paleta
+          },
+          '& .MuiOutlinedInput-root': {
+            '&.Mui-focused fieldset': {
+              borderColor: '#A979E6' // Cor da borda quando focado
+            }
+          }
+        }
+      }
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          'label + &': {
+            // Estilização do placeholder
+            '& .MuiInputBase-input::placeholder': {
+              color: 'common.white', // Cor do placeholder
+              opacity: 1 // Para garantir que o placeholder seja visível
+            }
+          },
+          '& .MuiInputBase-input': {
+            color: '#140400' // Cor do texto digitado
+          }
+        }
+      }
     }
   }
 })

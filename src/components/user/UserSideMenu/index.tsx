@@ -70,7 +70,14 @@ const UserSideMenu: React.FC = () => {
   }, [db, t])
 
   return (
-    <Paper sx={{ height: '100%', overflow: 'hidden' }} elevation={1}>
+    <Paper
+      sx={{
+        height: '100%',
+        overflow: 'hidden',
+        backgroundColor: 'common.white'
+      }}
+      elevation={1}
+    >
       <Box
         sx={{
           display: 'flex',

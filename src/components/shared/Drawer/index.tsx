@@ -20,7 +20,11 @@ const Drawer: React.FC<CustomDrawerProps> = ({
       open={isOpen}
       onClose={toggle}
       PaperProps={{
-        sx: { maxWidth: '12rem', width: '100%' }
+        sx: {
+          maxWidth: '12rem',
+          width: '100%',
+          backgroundColor: 'common.white'
+        }
       }}
       ModalProps={{
         keepMounted: true

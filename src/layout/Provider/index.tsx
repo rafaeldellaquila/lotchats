@@ -1,4 +1,3 @@
-import { Global } from '@emotion/react'
 import { ThemeProvider } from '@mui/material'
 import { StrictMode, useState } from 'react'
 import { Provider as StoreProvider } from 'react-redux'
@@ -10,7 +9,7 @@ import SearchModal from '@/components/shared/SearchModal'
 import { ModalContext } from '@/context/ModalContext'
 import { useToggle } from '@/hooks/useToggle'
 import { persistor, store } from '@/redux/store/index'
-import { GlobalStyles } from '@/theme/global'
+import GlobalStyles from '@/theme/global'
 import theme from '@theme/index'
 
 const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -32,7 +31,7 @@ const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <StoreProvider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <ThemeProvider theme={theme}>
-            <Global styles={GlobalStyles} />
+            <GlobalStyles />
             <ModalContext.Provider
               value={{
                 isCreateGroupModalOpen,

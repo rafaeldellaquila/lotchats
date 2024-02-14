@@ -66,8 +66,10 @@ const CreateGroupChatModal: React.FC<{
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{t('create_group')}</DialogTitle>
-      <DialogContent>
+      <DialogTitle sx={{ backgroundColor: 'common.white' }}>
+        {t('create_group')}
+      </DialogTitle>
+      <DialogContent sx={{ backgroundColor: 'common.white' }}>
         <Box
           component='form'
           sx={{

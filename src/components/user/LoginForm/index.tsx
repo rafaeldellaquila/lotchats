@@ -55,6 +55,7 @@ const LoginForm: React.FC = () => {
         name='email'
         autoComplete='email'
         autoFocus
+        color='primary'
         value={email}
         onChange={handleEmailChange}
       />

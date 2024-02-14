@@ -15,7 +15,8 @@ import {
   Menu,
   ListItemButton,
   ListItemAvatar,
-  ListItemText
+  ListItemText,
+  Box
 } from '@mui/material'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -55,12 +56,20 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
 
   return (
     <AppBar position='static' elevation={0} color='transparent'>
-      <Toolbar>
-        <IconButton edge='start' onClick={onBack}>
-          <ChevronLeftIcon />
-        </IconButton>
-        <Avatar src={receiver.avatarUrl} alt={receiver.name} />
-        <Typography variant='h6'>{receiver.name}</Typography>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignContent: 'center'
+          }}
+        >
+          <IconButton edge='start' onClick={onBack} sx={{ mr: 2 }}>
+            <ChevronLeftIcon />
+          </IconButton>
+          <Avatar src={receiver.avatarUrl} alt={receiver.name} sx={{ mr: 2 }} />
+          <Typography variant='h6'>{receiver.name}</Typography>
+        </Box>
         <IconButton onClick={e => setAnchorEl(e.currentTarget)}>
           <MoreVertIcon />
         </IconButton>

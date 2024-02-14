@@ -41,7 +41,10 @@ const CommunitySideMenu: React.FC = () => {
   ]
 
   return (
-    <Paper elevation={1} sx={{ height: '100%' }}>
+    <Paper
+      elevation={1}
+      sx={{ height: '100%', backgroundColor: 'common.white' }}
+    >
       <List>
         {menuItems.map((item, index) => (
           <ListItem
