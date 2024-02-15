@@ -1,15 +1,55 @@
 import { Box, List, ListItem, Typography } from '@mui/material'
+import { collection, getDocs, getFirestore } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
+import { GroupProps } from '@/@types/common'
 import GroupChatCard from '@/components/chat/group/GroupChatCard'
 import PrivateChatCard from '@/components/chat/private/PrivateChatCard'
-import { selectSearchResults } from '@/redux/slices/searchSlice'
+import {
+  selectSearchResults,
+  clearSearchResults,
+  setSearchResults
+} from '@/redux/slices/searchSlice'
 
 const SearchResultsList: React.FC = () => {
   const { t } = useTranslation()
-
+  const dispatch = useDispatch()
+  const [fetchedGroups, setFetchedGroups] = useState(false)
   const { privateChats, groupChats } = useSelector(selectSearchResults)
+  const [groups, setGroups] = useState<GroupProps[]>(groupChats)
+
+  useEffect(() => {
+    if (
+      !fetchedGroups &&
+      privateChats.length === 0 &&
+      groupChats.length === 0
+    ) {
+      const fetchGroups = async () => {
+        const db = getFirestore()
+        const querySnapshot = await getDocs(collection(db, 'groups'))
+        const fetchedGroups = querySnapshot.docs.map(doc => ({
+          ...doc.data(),
+          createdAt: new Date().toISOString()
+        })) as GroupProps[]
+
+        console.log(fetchedGroups)
+
+        dispatch(
+          setSearchResults({ privateChats: [], groupChats: fetchedGroups })
+        )
+        setGroups(fetchedGroups)
+        setFetchedGroups(true)
+      }
+
+      fetchGroups()
+    }
+
+    return () => {
+      dispatch(clearSearchResults())
+    }
+  }, [dispatch, fetchedGroups, privateChats.length, groupChats.length])
 
   return (
     <Box>
@@ -31,14 +71,14 @@ const SearchResultsList: React.FC = () => {
           </List>
         </>
       )}
-      {groupChats.length > 0 && (
+      {groups !== undefined && (
         <>
           <Typography variant='body1' fontWeight={600}>
             {t('group_chat')}
           </Typography>
           <List sx={{ p: 0 }}>
-            {groupChats.map(chat => (
-              <ListItem sx={{ p: 0 }} key={chat.id}>
+            {groups.map((chat, index) => (
+              <ListItem sx={{ p: 0 }} key={index}>
                 <GroupChatCard
                   id={chat.id}
                   avatarUrl={chat.avatarUrl}

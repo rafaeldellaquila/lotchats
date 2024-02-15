@@ -33,8 +33,6 @@ export const usePrivateChat = () => {
           })
         }
 
-        console.log(chatId)
-
         navigate(`/privatechat/${chatId}`)
       } catch (error) {
         console.error(t('failed_to_get_chat'), error)

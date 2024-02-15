@@ -1,4 +1,3 @@
-// src/hooks/useUserName.ts
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { useState, useEffect } from 'react'
 

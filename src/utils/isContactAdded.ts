@@ -19,7 +19,7 @@ export const isContactAdded = async (id: string): Promise<boolean> => {
     const userDoc = await getDoc(userDocRef)
 
     if (!userDoc.exists()) {
-      console.log('Documento do usuário não encontrado.')
+      console.error('Documento do usuário não encontrado.')
       return false
     }
 

@@ -83,7 +83,7 @@ const CreateGroupChatModal: React.FC<{
           <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
             <Avatar src={avatarPreview} sx={{ width: 56, height: 56 }} />
           </Box>
-          <Button variant='contained' component='label' sx={{ mb: 2 }}>
+          <Button component='label' sx={{ mb: 2 }} variant='outlined'>
             {t('upload_avatar')}
             <input
               type='file'
@@ -115,9 +115,13 @@ const CreateGroupChatModal: React.FC<{
           />
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>{t('cancel')}</Button>
-        <Button onClick={handleCreateGroupClick}>{t('create')}</Button>
+      <DialogActions sx={{ backgroundColor: 'common.white' }}>
+        <Button onClick={onClose} color='error'>
+          {t('cancel')}
+        </Button>
+        <Button variant='contained' onClick={handleCreateGroupClick}>
+          {t('create')}
+        </Button>
       </DialogActions>
     </Dialog>
   )

@@ -7,7 +7,7 @@ export const useGroupInfo = () => {
   const { t } = useTranslation()
   const fetchGroupInfo = async (groupId: string) => {
     if (!groupId) {
-      console.log('No groupId provided')
+      console.error('No groupId provided')
       return
     }
 

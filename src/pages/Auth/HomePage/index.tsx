@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { PreviewChatProps } from '@/@types/common'
 import ChatCardList from '@/components/chat/shared/ChatCardList'
+import HomeBanner from '@/components/HomeBanner'
 import { auth } from '@/firebase'
 import { setLoading, setUser } from '@/redux/slices/authSlice'
 
@@ -85,11 +86,9 @@ const HomePage: React.FC = () => {
           return null
         })
       )
-      const filteredChatsData = chatsData.filter(
-        (chat): chat is PreviewChatProps => chat !== null
-      )
+      const filteredChatsData = chatsData.filter(chat => chat !== null)
 
-      setChats(filteredChatsData)
+      setChats(filteredChatsData as PreviewChatProps[])
       setIsLoading(false)
     }
 
@@ -149,8 +148,9 @@ const HomePage: React.FC = () => {
 
   return (
     <>
-      <ChatCardList title={t('private_chats')} chats={chats} />
-      <ChatCardList title={t('group_chats')} chats={groups} />
+      {chats.length == 0 && groups.length == 0 && <HomeBanner />}
+      {chats && <ChatCardList title={t('private_chats')} chats={chats} />}
+      {groups && <ChatCardList title={t('group_chats')} chats={groups} />}
     </>
   )
 }

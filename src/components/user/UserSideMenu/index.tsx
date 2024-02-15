@@ -98,7 +98,7 @@ const UserSideMenu: React.FC = () => {
       <Divider sx={{ m: '.5rem', borderColor: 'transparent' }} />
       <List sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
         <ListItem
-          onClick={() => toggleCreateGroupModal}
+          onClick={() => toggleCreateGroupModal()}
           sx={{ cursor: 'pointer' }}
         >
           <ListItemIcon>

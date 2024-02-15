@@ -1,4 +1,3 @@
-// hooks/useContacts.ts
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { useState, useEffect } from 'react'
 

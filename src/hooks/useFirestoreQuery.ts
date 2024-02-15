@@ -13,7 +13,6 @@ import { UserProps, GroupProps } from '@/@types/common'
 export const useFirestoreQuery = () => {
   const db = getFirestore()
 
-  // Método para realizar a busca
   const fetchQueryResults = async (searchTerm: string) => {
     if (!searchTerm.trim()) return { users: [], groups: [] }
 

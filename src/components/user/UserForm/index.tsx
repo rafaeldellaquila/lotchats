@@ -201,7 +201,12 @@ const UserForm: React.FC = () => {
     <Box
       component='form'
       onSubmit={handleSubmit}
-      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        paddingX: '2rem'
+      }}
     >
       <Avatar
         src={avatarPreview}
@@ -258,7 +263,7 @@ const UserForm: React.FC = () => {
 
       {isRegisterPage || isConfigPage ? (
         <>
-          <Typography component='h1' variant='h5'>
+          <Typography component='h1' fontWeight='bold' sx={{ mt: '2rem' }}>
             {isRegisterPage ? t('create_your_password') : t('change_password')}
           </Typography>
           {isConfigPage && (

@@ -34,7 +34,7 @@ const GroupChatCard: React.FC<GroupProps> = ({
 
     const userSnap = await getDoc(doc(getFirestore(), 'users', currentUserUid))
     if (!userSnap.exists()) {
-      console.log(t('user_not_found'))
+      console.error(t('user_not_found'))
       return
     }
 

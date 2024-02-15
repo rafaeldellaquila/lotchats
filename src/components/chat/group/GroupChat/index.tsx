@@ -26,12 +26,12 @@ const GroupChat: React.FC<GroupChatProps> = ({ groupId, onBack }) => {
     fetchGroupInfo(groupId).then(res => {
       setGroupInfo(res)
     })
-  }, [groupId, fetchGroupInfo])
+  }, [])
 
   useEffect(() => {
     const unsubscribe = fetchGroupMessages(groupId, setMessages)
     return () => unsubscribe()
-  }, [groupId])
+  }, [])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })

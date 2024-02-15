@@ -54,6 +54,8 @@ export const useCreateGroup = () => {
       ]
     })
 
+    await updateDoc(groupDocRef, { id: groupDocRef.id })
+
     await updateDoc(userDocRef, { groups: arrayUnion(groupDocRef.id) })
 
     return groupDocRef.id

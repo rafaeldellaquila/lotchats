@@ -1,4 +1,3 @@
-// CommunitySideMenu.tsx
 import {
   Home as HomeIcon,
   Language as LanguageIcon,

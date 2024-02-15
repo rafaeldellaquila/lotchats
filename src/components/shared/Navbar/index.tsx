@@ -33,9 +33,10 @@ const NavBar: React.FC = () => {
   const db = getFirestore()
 
   const dispatch = useDispatch()
-  const { currentUser, isLoading } = useSelector(
-    (state: RootState) => state.user
+  const { user: currentUser, isLoading } = useSelector(
+    (state: RootState) => state.auth
   )
+
   const [isCommunityDrawerOpen, toggleCommunityDrawer] = useToggle()
   const [isUserDrawerOpen, toggleUserDrawer] = useToggle()
 
@@ -72,7 +73,7 @@ const NavBar: React.FC = () => {
     }
 
     fetchUserData()
-  }, [db, dispatch, t])
+  }, [db, t])
 
   if (isLoading) {
     return <CircularProgress />
@@ -129,8 +130,8 @@ const NavBar: React.FC = () => {
               <Avatar
                 onClick={toggleUserDrawer}
                 sx={{ mr: '1rem' }}
-                src={currentUser !== undefined ? currentUser.avatarUrl : ' '}
-                alt={currentUser !== undefined ? currentUser.name : ' '}
+                src={currentUser?.avatarUrl || ''}
+                alt={currentUser !== null ? currentUser.name : ' '}
               />
               <Drawer
                 isOpen={isUserDrawerOpen}

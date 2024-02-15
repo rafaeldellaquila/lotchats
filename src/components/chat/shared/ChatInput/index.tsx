@@ -1,6 +1,5 @@
-// src/components/ChatInput.tsx
 import { Send as SendIcon } from '@mui/icons-material'
-import { Box, IconButton, InputBase } from '@mui/material'
+import { Box, IconButton, TextField } from '@mui/material'
 import {
   addDoc,
   collection,
@@ -51,15 +50,17 @@ const ChatInput: React.FC<ChatInputProps> = ({ chatId, isGroup = false }) => {
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px' }}>
-      <InputBase
+      <TextField
         fullWidth
         value={message}
         onChange={e => setMessage(e.target.value)}
         placeholder={t('type_message')}
         onKeyDown={handleKeyPress}
         multiline
+        color='primary'
         maxRows={4}
         sx={{ ml: 1, flex: 1 }}
+        variant='standard'
       />
       <IconButton color='primary' onClick={sendMessage}>
         <SendIcon />

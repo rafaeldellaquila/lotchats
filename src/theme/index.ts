@@ -79,11 +79,11 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           '& label.Mui-focused': {
-            color: '#A979E6' // Ou theme.palette.primary.main se quiser referenciar diretamente da paleta
+            color: '#A979E6'
           },
           '& .MuiOutlinedInput-root': {
             '&.Mui-focused fieldset': {
-              borderColor: '#A979E6' // Cor da borda quando focado
+              borderColor: '#A979E6'
             }
           }
         }
@@ -93,14 +93,13 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           'label + &': {
-            // Estilização do placeholder
             '& .MuiInputBase-input::placeholder': {
-              color: 'common.white', // Cor do placeholder
-              opacity: 1 // Para garantir que o placeholder seja visível
+              color: 'common.white',
+              opacity: 1
             }
           },
           '& .MuiInputBase-input': {
-            color: '#140400' // Cor do texto digitado
+            color: '#140400'
           }
         }
       }

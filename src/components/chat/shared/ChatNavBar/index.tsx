@@ -58,7 +58,9 @@ const ChatNavBar: React.FC<ChatNavBarProps> = ({
     <AppBar position='static' elevation={0} color='transparent'>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Box
+          onClick={handleMembersDialogToggle}
           sx={{
+            cursor: 'pointer',
             display: 'flex',
             justifyContent: 'center',
             alignContent: 'center'
