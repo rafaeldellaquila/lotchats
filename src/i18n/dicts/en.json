@@ -24,6 +24,7 @@
   "error_on_load_user": "Error on load user",
   "failed_to_get_chat": "Fail to get chat",
   "group_chat": "Groups",
+  "group_chats": "Groups",
   "group_description": "Group description",
   "group_name": "Group name",
   "group_not_found": "Group not found",
@@ -47,10 +48,10 @@
   "submit": "Submit",
   "upload_avatar": "Upload avatar",
   "upload_avatar_error": "Error on upload avatar",
+  "user": "Usuario",
   "user_contact_not_found": "Contact not found",
   "user_not_found": "User not found",
   "user_registered_successfully": "User Registered successfully",
   "user_updated_error": "Error updating user",
-  "user_updated_successfully": "User updated successfully",
-  "user": "Usuario"
+  "user_updated_successfully": "User updated successfully"
 }
