@@ -14,28 +14,32 @@ export const usePrivateChat = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
 
-  const handleContactChatClick = async (contactId: string) => {
+  const handleContactChatClick = async (contactOrChatId: string) => {
     const db = getFirestore()
     const currentUser = auth.currentUser
 
     if (currentUser) {
-      const userIds = [currentUser.uid, contactId].sort()
-      const chatId = userIds.join('_')
-      const chatDocRef = doc(db, 'chats', chatId)
+      if (contactOrChatId.includes('_')) {
+        navigate(`/privatechat/${contactOrChatId}`)
+      } else {
+        const userIds = [currentUser.uid, contactOrChatId].sort()
+        const chatId = userIds.join('_')
+        const chatDocRef = doc(db, 'chats', chatId)
 
-      try {
-        const chatDocSnap = await getDoc(chatDocRef)
+        try {
+          const chatDocSnap = await getDoc(chatDocRef)
 
-        if (!chatDocSnap.exists()) {
-          await setDoc(chatDocRef, {
-            members: userIds,
-            createdAt: serverTimestamp()
-          })
+          if (!chatDocSnap.exists()) {
+            await setDoc(chatDocRef, {
+              members: userIds,
+              createdAt: serverTimestamp()
+            })
+          }
+          console.log('Chat created or already exists', chatId)
+          navigate(`/privatechat/${chatId}`)
+        } catch (error) {
+          console.error(t('failed_to_get_chat'), error)
         }
-
-        navigate(`/privatechat/${chatId}`)
-      } catch (error) {
-        console.error(t('failed_to_get_chat'), error)
       }
     }
   }

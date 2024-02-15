@@ -19,6 +19,7 @@ const PrivateChatCard: React.FC<PreviewChatProps> = ({
   const { handleContactChatClick } = usePrivateChat()
 
   useEffect(() => {
+    console.log('id private chat card', id)
     let isMounted = true
 
     const ContactsCheck = async () => {
