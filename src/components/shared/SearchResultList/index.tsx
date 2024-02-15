@@ -34,8 +34,6 @@ const SearchResultsList: React.FC = () => {
           createdAt: new Date().toISOString()
         })) as GroupProps[]
 
-        console.log(fetchedGroups)
-
         dispatch(
           setSearchResults({ privateChats: [], groupChats: fetchedGroups })
         )
@@ -45,11 +43,11 @@ const SearchResultsList: React.FC = () => {
 
       fetchGroups()
     }
-
+    console.log(privateChats)
     return () => {
       dispatch(clearSearchResults())
     }
-  }, [dispatch, fetchedGroups, privateChats.length, groupChats.length])
+  }, [dispatch, fetchedGroups])
 
   return (
     <Box>

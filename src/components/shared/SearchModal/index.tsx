@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { searchModalStyles } from '../Navbar/styles'
+import { searchModalStyles } from '../../../theme/styles'
 
 import { useFirestoreQuery } from '@/hooks/useFirestoreQuery'
 import { setSearchResults } from '@/redux/slices/searchSlice'

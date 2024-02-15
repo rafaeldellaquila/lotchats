@@ -19,16 +19,15 @@ const PrivateChatCard: React.FC<PreviewChatProps> = ({
   const { handleContactChatClick } = usePrivateChat()
 
   useEffect(() => {
-    console.log('id private chat card', id)
     let isMounted = true
 
-    const ContactsCheck = async () => {
-      const contactAdded = await isContactAdded(id)
+    const checkContactAdded = async () => {
+      const isAdded = await isContactAdded(id)
       if (isMounted) {
-        setContactAdded(contactAdded)
+        setContactAdded(isAdded) // Atualiza o estado com o resultado da verificação
       }
     }
-    ContactsCheck()
+    checkContactAdded()
 
     return () => {
       isMounted = false
@@ -80,7 +79,7 @@ const PrivateChatCard: React.FC<PreviewChatProps> = ({
           </Typography>
         </Box>
       </CardActionArea>
-      {contactAdded && (
+      {!contactAdded && (
         <CardActionArea
           onClick={() => toggleAddPersonModal(id)}
           sx={{

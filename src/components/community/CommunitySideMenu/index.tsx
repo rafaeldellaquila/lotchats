@@ -18,6 +18,7 @@ import ContactList from '../ContactList'
 
 import { useContacts } from '@/hooks/useContacts'
 import { useModal } from '@/hooks/useModal'
+import { primaryTypographyStyles } from '@/theme/styles'
 
 const CommunitySideMenu: React.FC = () => {
   const navigate = useNavigate()
@@ -30,11 +31,13 @@ const CommunitySideMenu: React.FC = () => {
     {
       icon: <LanguageIcon />,
       text: 'discover',
+      color: 'info.main',
       action: () => navigate('/discover')
     },
     {
       icon: <GroupAddIcon />,
       text: 'create_group',
+      color: 'success.main',
       action: toggleCreateGroupModal
     }
   ]
@@ -51,8 +54,13 @@ const CommunitySideMenu: React.FC = () => {
             onClick={item.action}
             sx={{ cursor: 'pointer' }}
           >
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText primary={t(item.text)} />
+            <ListItemIcon sx={{ color: item.color }}>{item.icon}</ListItemIcon>
+            <ListItemText
+              primary={t(item.text)}
+              primaryTypographyProps={primaryTypographyStyles({
+                color: item.color
+              })}
+            />
           </ListItem>
         ))}
       </List>

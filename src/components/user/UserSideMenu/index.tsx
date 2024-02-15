@@ -21,10 +21,10 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { primaryTypographyStyles } from '@/components/shared/Navbar/styles'
 import { auth } from '@/firebase'
 import { useModal } from '@/hooks/useModal'
 import { setLoading, setUser } from '@/redux/slices/authSlice'
+import { primaryTypographyStyles } from '@/theme/styles'
 
 const UserSideMenu: React.FC = () => {
   const { t } = useTranslation()
@@ -101,13 +101,13 @@ const UserSideMenu: React.FC = () => {
           onClick={() => toggleCreateGroupModal()}
           sx={{ cursor: 'pointer' }}
         >
-          <ListItemIcon>
+          <ListItemIcon sx={{ color: 'success.main' }}>
             <GroupAddIcon />
           </ListItemIcon>
           <ListItemText
             primary={t('create_group')}
             primaryTypographyProps={primaryTypographyStyles({
-              color: 'grey.100'
+              color: 'success.main'
             })}
           />
         </ListItem>

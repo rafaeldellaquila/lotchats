@@ -1,5 +1,6 @@
 # Lotchats
-
+![Home](/public/home.png)
+![Drawer](/public/drawer.png)
 ## Introdução
 
 Lotchats é um projeto de aplicação de chat em tempo real, construído com React e TypeScript. O projeto utiliza o Firebase para autenticação, armazenamento de dados em tempo real. O design é realizado com o Material-UI para React, proporcionando uma interface de usuário limpa e responsiva, componentizado de forma modular diminuindo a complexidade na componentização e na escalabilidade do projeto.
@@ -20,10 +21,12 @@ Lotchats é um projeto de aplicação de chat em tempo real, construído com Rea
     - [Hooks Personalizados](#hooks-personalizados)
     - [Utilitários (Utils)](#utilitários-utils)
   - [Uso](#uso)
+  - [To-dos](#to-dos)
 
 
 ## Firebase
-
+![Home](/public/discover.png)
+![Drawer](/public/modal.png)
 > As váriaveis de ambiente serão enviadas via e-mail mas aqui também será disponibilizado como fazer a replicação dentro do Firebase Console.
 
 Caso você não tenha acesso as váriaveis de ambiente, você precisará seguir alguns passos importantes para garantir a comunicação da aplicação com o Firebase.
@@ -65,6 +68,8 @@ npm run dev
 
 ## Funcionalidade
 
+![Home](/public/group.png)
+![Drawer](/public/private.png)
 ### Internacionalização (i18n)
 O projeto suporta múltiplos idiomas, facilitando a expansão global e a personalização do usuário. A configuração e as traduções são gerenciadas através do diretório src/i18n.
 
@@ -88,3 +93,8 @@ O diretório `src/utils` contém funções úteis que apoiam operações comuns 
 
 ## Uso
 Após a instalação, o projeto pode ser executado localmente com ```npm run dev```, iniciando o servidor de desenvolvimento e permitindo testes em tempo real.
+
+## To-dos
+- Implementar bloqueio, exclusão de usuários e grupos
+- Exclusão dos próprios dados
+- Implementar loadings e feedbacks de erros e sucesso
